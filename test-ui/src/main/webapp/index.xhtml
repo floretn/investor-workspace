@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Работа с Базой Данных</title>
+</h:head>
+
+<h:body>
+    <h2>#{bean.msg}</h2>
+    <h:form id="tableForm">
+        <p:dataTable id="table" var="helper" value="#{bean.helpers}">
+            <p:column headerText="id">
+                <h:outputText value="#{helper.stock.stckPK}"/>
+            </p:column>
+            <p:column headerText="Тикер">
+                <h:outputText value="#{helper.stock.stckTicker}"/>
+            </p:column>
+            <p:column headerText="Количество ценных бумаг">
+                <h:outputText value="#{helper.stock.stckNum}"/>
+            </p:column>
+            <p:column headerText="Цена">
+                <h:outputText value="#{helper.sp.spPrice}"/>
+            </p:column>
+            <p:column headerText="Количество бумаг в индексе">
+                <h:outputText value="#{helper.sii.siiNumStck}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</h:body>
+</html>
