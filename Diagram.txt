@@ -1,0 +1,76 @@
+@startuml
+
+entity "t_sectors" as sectors {
+	*sctr_pk : int <<generated>>
+    	--
+	*sctr_name : varchar	
+}
+
+entity "t_sectors_of_companies" as soc {
+	*soc_pk : int <<generated>>
+    	--
+	*soc_cmpn_fk : int <<FK>>
+	*soc_sctr_fk : int <<FK>>	
+}
+
+entity "t_companies" as companies {
+	*cmpn_pk : int <<generated>>
+    	--
+	*cmpn_name : varchar	
+}
+
+entity "t_stocks" as stocks {
+	*stck_pk : int <<generated>>
+    	--
+	*stck_cmpn_fk : int <<FK>>
+	*stck_name : varchar	
+	*stck_ticker : varchar	
+	*stck_num : int
+}
+
+entity "t_indexes" as indexes {
+	*indx_pk : int <<generated>>
+    	--
+	*indx_name : varchar		
+}
+
+entity "t_date_of_indexes_changes" as doic {
+	*doic_pk : int <<generated>>
+	--
+	*doic_indx_fk : int <<FK>>
+	*doic_date_chng : date
+}
+
+entity "t_stocks_in_indexes" as sii {
+	*sii_pk : int <<generated>>
+    	--
+	*sii_stck_fk : int <<FK>>	
+	*sii_doic_fk : int <<FK>>	
+	*sii_num_stck : int
+}
+
+entity "t_currency" as currency {
+	*cur_pk : int <<generated>>
+    	--
+	*cur_name : varchar		
+}
+
+entity "t_stocks_prices" as sp {
+	*sp_pk : int <<generated>>
+    	--
+	*sp_cur_fk : int <<FK>>
+	*sp_stck_fk : int <<FK>>	
+	*sp_time_set : timestamp
+	*sp_price : double	
+}
+
+sectors ||--o{ soc
+companies ||--o{ stocks
+companies ||--o{ soc
+stocks ||--o{ sii
+stocks ||--o{ sp
+doic ||--o{ sii
+indexes ||--o{ doic
+currency ||--o{ sp
+
+@enduml
