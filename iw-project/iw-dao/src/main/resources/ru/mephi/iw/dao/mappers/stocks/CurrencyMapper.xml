@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="currency-mapper">
+    
+    <resultMap id="CurrencyMap" type="ru.mephi.iw.models.stocks.Currency">
+        <id column="cur_pk" property="id"/>
+        <result column="cur_name" property="name"/>
+    </resultMap>
+    
+    <select id="selectCurrency" resultMap="CurrencyMap">
+        select cur_pk, cur_name from investor_workspace.t_currency where cur_pk = #{id}
+    </select>
+
+    <select id="selectAllCurrencies" resultMap="CurrencyMap">
+        select cur_pk, cur_name from investor_workspace.t_currency
+    </select>
+
+
+    <insert id="insertCurrency" keyColumn="cur_pk" keyProperty="currency.id" useGeneratedKeys="true"  >
+        insert into investor_workspace.t_currency (cur_name)
+        values (#{currency.name});
+            commit;
+    </insert>
+
+    <delete id="deleteCurrency">
+        delete from investor_workspace.t_currency where cur_pk = #{id};
+        commit;
+    </delete>
+
+    <update id="updateCurrency">
+        update investor_workspace.t_currency set cur_name = #{currency.name} where cur_pk = #{id};
+        commit;
+    </update>
+</mapper>

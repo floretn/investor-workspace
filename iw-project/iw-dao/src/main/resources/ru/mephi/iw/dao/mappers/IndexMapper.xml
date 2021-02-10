@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="index-mapper">
+    
+    <resultMap id="IndexMap" type="ru.mephi.iw.models.Index">
+        <id column="indx_pk" property="id"/>
+        <result column="indx_name" property="name"/>
+    </resultMap>
+
+    <select id="selectIndex" resultMap="IndexMap">
+        select indx_pk, indx_name from investor_workspace.t_indexes where indx_pk = #{id}
+    </select>
+
+    <select id="selectAllIndexes" resultMap="IndexMap">
+        select indx_pk, indx_name from investor_workspace.t_indexes
+    </select>
+
+
+    <insert id="insertIndex" keyColumn="indx_pk" keyProperty="index.id" useGeneratedKeys="true"  >
+        insert into investor_workspace.t_indexes (indx_name)
+        values (#{index.name});
+        commit;
+    </insert>
+
+    <delete id="deleteIndex">
+        delete from investor_workspace.t_indexes where indx_pk = #{id};
+        commit;
+    </delete>
+
+    <update id="updateIndex">
+        update investor_workspace.t_indexes set indx_name = #{index.name} where indx_pk = #{id};
+        commit;
+    </update>
+
+</mapper>

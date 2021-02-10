@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sii-mapper">
+
+    <resultMap id="SiiMap" type="ru.mephi.iw.models.StocksInIndexes">
+        <id column="sii_pk" property="id"/>
+        <result column="sii_stck_fk" property="stockId"/>
+        <result column="sii_doic_fk" property="dateOfIndexesChangesId"/>
+        <result column="sii_num_stck" property="numberOfStocksInIndex"/>
+    </resultMap>
+
+    <select id="selectSii" resultMap="SiiMap">
+        select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes where sii_pk = #{id}
+    </select>
+
+    <select id="selectAllSii" resultMap="SiiMap">
+        select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes
+    </select>
+
+
+    <insert id="insertSii" keyColumn="sii_pk" keyProperty="sii.id" useGeneratedKeys="true"  >
+        insert into investor_workspace.t_stocks_in_indexes (sii_stck_fk, sii_doic_fk, sii_num_stck)
+        values (#{sii.stockId}, #{sii.dateOfIndexesChangesId}, #{sii.numberOfStocksInIndex});
+        commit;
+    </insert>
+
+    <delete id="deleteSii">
+        delete from investor_workspace.t_stocks_in_indexes where sii_pk = #{id};
+        commit;
+    </delete>
+
+    <update id="updateSii">
+        update investor_workspace.t_stocks_in_indexes set sii_stck_fk = #{sii.stockId},
+                                                          sii_doic_fk = #{sii.dateOfIndexesChangesId},
+                                                          sii_num_stck = #{sii.numberOfStocksInIndex} where sii_pk = #{id};
+        commit;
+    </update>
+
+</mapper>
