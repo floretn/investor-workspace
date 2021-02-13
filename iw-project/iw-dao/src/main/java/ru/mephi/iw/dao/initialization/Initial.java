@@ -19,7 +19,7 @@ public class Initial {
             e.printStackTrace();
         }
     }
-    private static SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    private static final SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
     static {
         sqlSessionFactory.getConfiguration().addMapper(CompanyMapper.class);
         sqlSessionFactory.getConfiguration().addMapper(CurrencyMapper.class);

@@ -39,6 +39,7 @@ class WriteIMOEXClass {
         }else {
             for (int i = 0; i < 45; i++) {
                 Initial.stockMapper.insertStock(stocks.get(i));
+                stocksPrices.get(i).setStockId(stocks.get(i).getId());
                 Initial.spMapper.insertSp(stocksPrices.get(i));
                 Initial.siiMapper.insertSii(stocksInIndexes.get(i));
             }

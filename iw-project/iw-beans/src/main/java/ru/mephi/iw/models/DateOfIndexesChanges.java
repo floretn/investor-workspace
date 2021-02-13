@@ -4,6 +4,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**investor-workspace.t_date_of_indexes_changes*/
 @Data
 @Builder
 public class DateOfIndexesChanges implements Serializable{

@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface StockMapper {
 
-    @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker, stck_num from investor_workspace.t_stocks where stck_pk = #{id}")
+    @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = #{id}")
     Stock selectStock(int id);
 
-    @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker, stck_num from investor_workspace.t_stocks")
+    @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks")
     List<Stock> selectAllStocks();
 
     @Insert("insert into investor_workspace.t_stocks (stck_cmpn_fk, stck_name, stck_ticker)\n" +

@@ -12,11 +12,11 @@
     </resultMap>
 
     <select id="selectStock" resultMap="StockMap">
-        select stck_pk, stck_cmpn_fk, stck_name, stck_ticker, stck_num from investor_workspace.t_stocks where stck_pk = #{id}
+        select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = #{id}
     </select>
 
     <select id="selectAllStocks" resultMap="StockMap">
-        select stck_pk, stck_cmpn_fk, stck_name, stck_ticker, stck_num from investor_workspace.t_stocks
+        select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks
     </select>
 
     <insert id="insertStock" keyColumn="cmpn_pk" keyProperty="stock.id" useGeneratedKeys="true"  >

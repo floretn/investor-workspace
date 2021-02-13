@@ -29,6 +29,7 @@ class DownloadXlsFile {
             fileupload.sendKeys(f.getAbsolutePath());
             Select select = new Select(driverG.findElement(By.name("ctl00$MainContent$comboOutput")));
             select.selectByValue("Microsoft Excel (xlsx)");
+            TimeUnit.SECONDS.sleep(5);
             WebElement el = driverG.findElementById("MainContent_btnOCRConvert");
             TimeUnit.SECONDS.sleep(1);
             el.click();

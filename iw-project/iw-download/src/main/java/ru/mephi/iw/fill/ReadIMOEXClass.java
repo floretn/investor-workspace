@@ -44,10 +44,14 @@ class ReadIMOEXClass {
 
             for (Row cells : sheet) {
 
+                if (checkFirstTime) {
+                    checkFirstTime = false;
+                    continue;
+                }
+
                 if (check) {
                     iterator = cells.cellIterator();
 
-                    iterator.next();
                     ticker = iterator.next().getStringCellValue();
                     tickerSecond = ticker.substring(ticker.lastIndexOf("\n") + 1);
                     ticker = ticker.substring(0, ticker.lastIndexOf("\n"));
@@ -85,10 +89,8 @@ class ReadIMOEXClass {
                         stocksInIndexes = new ArrayList<>(45);
                     }
 
-                    formLists(ticker, Long.parseLong(numStckFirst.replaceAll(" ", "")), priceS,
-                            capStckInIndS, stckPK);
-                    formLists(tickerSecond, Long.parseLong(numStckSecond.replaceAll(" ", "")), priceSSecond,
-                            capStckInIndSSecond, stckPK++);
+                    formLists(ticker, priceS, capStckInIndS, stckPK);
+                    formLists(tickerSecond, priceSSecond, capStckInIndSSecond, ++stckPK);
                     stckPK++;
 
                     if (stckPK == 46) {
@@ -99,7 +101,7 @@ class ReadIMOEXClass {
 
 
                 iterator = cells.cellIterator();
-                iterator.next();
+                //iterator.next();
                 ticker = iterator.next().getStringCellValue();
 
                 Cell cell = iterator.next();
@@ -136,7 +138,7 @@ class ReadIMOEXClass {
                     capStckInIndS = capStckInIndS.replaceFirst(",", "");
                 }
 
-                formLists(ticker, numStck, priceS, capStckInIndS, stckPK);
+                formLists(ticker, priceS, capStckInIndS, stckPK);
                 stckPK++;
 
                 if (stckPK == 44){
@@ -153,8 +155,8 @@ class ReadIMOEXClass {
         }
     }
 
-    private static void formLists(String ticker, long numStck, String priceS, String capStckInIndexS, int stckPK){
-        stocks.add(Stock.builder().ticker(ticker).build());
+    private static void formLists(String ticker, String priceS, String capStckInIndexS, int stckPK){
+        stocks.add(Stock.builder().companyId(null).ticker(ticker).build());
         double price = Double.parseDouble(priceS.replaceAll(",", ".").replaceAll(" ", ""));
         stocksPrices.add(StocksPrices.builder().stockId(stckPK).currencyId(1).
                 settingTime(new Timestamp(System.currentTimeMillis())).price(price).build());

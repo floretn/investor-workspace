@@ -4,6 +4,7 @@ import ru.mephi.iw.exceptions.CanNotDeleteFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class FillClass {
 
@@ -14,19 +15,22 @@ public class FillClass {
         DownloadIMOEXPicture.downloadFiles();
         DownloadXlsFile.giveGif();
         File file = new File(System.getProperty("user.home") + "\\Downloads\\file.xlsx");
-        try {
-            ReadIMOEXClass.readXls(new FileInputStream(file));
-        } catch (Exception ex){
-            if (!file.delete()){
-                ex.addSuppressed(new CanNotDeleteFile("Не могу удалить скачанный файл" + System.getProperty("user.home")
-                        + "\\Downloads\\file.xlsx"));
+        boolean check = false;
+        while (!check) {
+            try {
+                ReadIMOEXClass.readXls(new FileInputStream(file));
+                check = true;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println("Файл был считан неправильно. Внесите изменения в файл " +
+                        System.getProperty("user.home") + "\\Downloads\\file.xlsx, а затем напечатайте любой символ и нажмите Enter:");
+                (new Scanner(System.in)).next();
             }
-            throw ex;
         }
+        WriteIMOEXClass.writeInDB(ReadIMOEXClass.stocks, ReadIMOEXClass.stocksPrices, ReadIMOEXClass.stocksInIndexes);
         if (!file.delete()){
             throw new CanNotDeleteFile("Не могу удалить скачанный файл C:\\Users\\floretn\\Downloads\\file.xlsx");
         }
-        WriteIMOEXClass.writeInDB(ReadIMOEXClass.stocks, ReadIMOEXClass.stocksPrices, ReadIMOEXClass.stocksInIndexes);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException, CanNotDeleteFile {
