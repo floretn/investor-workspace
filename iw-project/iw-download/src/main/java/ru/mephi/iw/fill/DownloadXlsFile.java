@@ -1,9 +1,12 @@
 package ru.mephi.iw.fill;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.ibatis.io.Resources;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,10 +20,11 @@ class DownloadXlsFile {
     }
 
     static void giveGif() throws IOException, InterruptedException {
-        System.setProperty("webdriver.chrome.driver", Resources.getResourceAsFile("chromedriver.exe").getCanonicalPath());
-        ChromeDriver driverG = new ChromeDriver();
-        File file = Resources.getResourceAsFile("file.gif");
-        BufferedImage image = ImageIO.read(file);
+        ChromeDriver driverG;
+        WebDriverManager.chromedriver().browserVersion("77.0.3865.40").setup();
+        ChromeOptions options = new ChromeOptions();
+        driverG = new ChromeDriver(options);
+        BufferedImage image = ImageIO.read(DownloadIMOEXPicture.fileGif);
         File f = new File("file.jpg");
         ImageIO.write(image, "jpg", f);
         try {
@@ -29,12 +33,13 @@ class DownloadXlsFile {
             fileupload.sendKeys(f.getAbsolutePath());
             Select select = new Select(driverG.findElement(By.name("ctl00$MainContent$comboOutput")));
             select.selectByValue("Microsoft Excel (xlsx)");
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(30);
             WebElement el = driverG.findElementById("MainContent_btnOCRConvert");
             TimeUnit.SECONDS.sleep(1);
             el.click();
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(30);
             el = driverG.findElementById("MainContent_lnkBtnDownloadOutput");
+            TimeUnit.SECONDS.sleep(1);
             el.click();
             TimeUnit.SECONDS.sleep(2);
         }finally {

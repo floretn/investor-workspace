@@ -7,12 +7,15 @@ import java.util.Calendar;
 
 public class DownloadIMOEXPicture {
 
+    static File fileGif;
+
     DownloadIMOEXPicture() {
     }
 
     static void downloadFiles() throws IOException {
+        fileGif = new File("file.gif");
         try(InputStream in = (new URL(getURL())).openStream();
-            OutputStream writer = new FileOutputStream(Resources.getResourceAsFile("file.gif"))){
+            OutputStream writer = new FileOutputStream(fileGif)){
             byte[] buffer = new byte[1024];
             int c;
             while ((c = in.read(buffer)) > 0) {
@@ -53,6 +56,12 @@ public class DownloadIMOEXPicture {
 
         String year = calendar.get(Calendar.YEAR) + "";
         return strURL1 + year + month + day + strURL2;
+    }
+
+    public static void main(String args[]){
+
+        System.out.println("Press Any Key To Continue...");
+        new java.util.Scanner(System.in).nextLine();
     }
 }
 

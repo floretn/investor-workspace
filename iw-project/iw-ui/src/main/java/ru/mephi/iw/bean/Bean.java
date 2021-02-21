@@ -56,7 +56,7 @@ public class Bean implements Serializable {
             spMethods = Initial.spMapper;
             siiMethods = Initial.siiMapper;
             stocks = stockMethods.selectAllStocks();
-            stocksP = spMethods.selectAllSp();
+            stocksP = spMethods.selectAllSpLastIMOEX();
             stocksI = siiMethods.selectAllSii();
             helpers = new ArrayList<Helper>(45);
             for (int i = 0; i < 45; i++){
@@ -67,10 +67,18 @@ public class Bean implements Serializable {
             }
             thread = new Thread(() -> {
                 while (true) {
+                    long t1;
+                    long t2;
+                    t1 = System.currentTimeMillis();
                     try {
                         FillClass.fill();
-                        TimeUnit.SECONDS.sleep(86400);
-                    } catch (InterruptedException | CanNotDeleteFile | IOException e) {
+                    } catch (CanNotDeleteFile | IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    t2 = System.currentTimeMillis();
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(86400000 - t2 + t1);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

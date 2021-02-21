@@ -19,7 +19,6 @@
         select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes
     </select>
 
-
     <insert id="insertSii" keyColumn="sii_pk" keyProperty="sii.id" useGeneratedKeys="true"  >
         insert into investor_workspace.t_stocks_in_indexes (sii_stck_fk, sii_doic_fk, sii_num_stck)
         values (#{sii.stockId}, #{sii.dateOfIndexesChangesId}, #{sii.numberOfStocksInIndex});

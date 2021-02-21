@@ -7,7 +7,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,27 +19,28 @@ class ReadIMOEXClass {
     static List<StocksPrices> stocksPrices;
     static List<StocksInIndexes> stocksInIndexes;
 
+    private static Iterator<Cell> iterator;
+    private static boolean check = true;
+    private static String ticker;
+    private static String tickerSecond;
+    private static double price;
+    private static String priceS;
+    private static String priceSSecond;
+    private static long numStck;
+    private static String numStckFirst;
+    private static String numStckSecond;
+    private static String capStckInIndS;
+    private static String capStckInIndSSecond;
+    private static double capStckInInd;
+    private static int stckPK = 1;
+    private static boolean checkFirstTime = true;
+
     ReadIMOEXClass() {
     }
 
     static void readXls(InputStream is) throws IOException {
         try(XSSFWorkbook workbook = new XSSFWorkbook(is)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
-            Iterator<Cell> iterator;
-            boolean check = true;
-            String ticker;
-            String tickerSecond;
-            double price;
-            String priceS;
-            String priceSSecond;
-            long numStck;
-            String numStckFirst;
-            String numStckSecond;
-            String capStckInIndS;
-            String capStckInIndSSecond;
-            double capStckInInd;
-            int stckPK = 1;
-            boolean checkFirstTime = true;
 
             for (Row cells : sheet) {
 
@@ -50,48 +50,8 @@ class ReadIMOEXClass {
                 }
 
                 if (check) {
-                    iterator = cells.cellIterator();
 
-                    ticker = iterator.next().getStringCellValue();
-                    tickerSecond = ticker.substring(ticker.lastIndexOf("\n") + 1);
-                    ticker = ticker.substring(0, ticker.lastIndexOf("\n"));
-
-                    priceS = iterator.next().getStringCellValue();
-                    priceSSecond = priceS.substring(priceS.lastIndexOf("\n") + 1);
-                    priceS = priceS.substring(0, priceS.lastIndexOf("\n"));
-
-                    Cell cell = iterator.next();
-                    try {
-                        numStckFirst = cell.getStringCellValue();
-                        numStckSecond = numStckFirst.substring(numStckFirst.lastIndexOf("\n") + 1);
-                        numStckFirst = numStckFirst.substring(0, numStckFirst.lastIndexOf("\n"));
-                    }catch (java.lang.IllegalStateException ex){
-                        int d = (int) cell.getNumericCellValue();
-                        numStckFirst = d + "";
-                        numStckSecond = "";
-                    }
-                    String s = iterator.next().getStringCellValue();
-                    String ss = s.substring(s.lastIndexOf("\n") + 1);
-                    s = s.substring(0, s.lastIndexOf("\n"));
-                    numStckFirst += s;
-                    numStckSecond += ss;
-
-                    iteratorNext(3, iterator);
-
-                    capStckInIndS = iterator.next().getStringCellValue();
-                    capStckInIndSSecond = capStckInIndS.substring(capStckInIndS.lastIndexOf("\n") + 1);
-                    capStckInIndS = capStckInIndS.substring(0, capStckInIndS.lastIndexOf("\n"));
-
-                    check = false;
-                    if (stckPK == 1) {
-                        stocks = new ArrayList<>(45);
-                        stocksPrices = new ArrayList<>(45);
-                        stocksInIndexes = new ArrayList<>(45);
-                    }
-
-                    formLists(ticker, priceS, capStckInIndS, stckPK);
-                    formLists(tickerSecond, priceSSecond, capStckInIndSSecond, ++stckPK);
-                    stckPK++;
+                    ifLineWithTwoElements(cells);
 
                     if (stckPK == 46) {
                         break;
@@ -99,47 +59,7 @@ class ReadIMOEXClass {
                     continue;
                 }
 
-
-                iterator = cells.cellIterator();
-                //iterator.next();
-                ticker = iterator.next().getStringCellValue();
-
-                Cell cell = iterator.next();
-                try {
-                    priceS = cell.getStringCellValue();
-                } catch (java.lang.IllegalStateException ex) {
-                    price = cell.getNumericCellValue();
-                    priceS = price + "";
-                }
-
-                numStck = readNumStckAll(iterator);
-
-                iteratorNext(2, iterator);
-
-                String dop = "";
-                try {
-                    String s = iterator.next().getStringCellValue();
-                    if (s.contains(" ")){
-                        dop = s.substring(s.lastIndexOf(" "));
-                    }
-                }catch (Exception ex){
-                }
-
-                cell = iterator.next();
-                try {
-                    capStckInIndS = cell.getStringCellValue();
-                } catch (java.lang.IllegalStateException ex) {
-                    capStckInInd = cell.getNumericCellValue();
-                    capStckInIndS = capStckInInd + "";
-                }
-
-                capStckInIndS = dop.replaceAll(" ", "") + capStckInIndS;
-                while (capStckInIndS.lastIndexOf(",") != capStckInIndS.indexOf(",")){
-                    capStckInIndS = capStckInIndS.replaceFirst(",", "");
-                }
-
-                formLists(ticker, priceS, capStckInIndS, stckPK);
-                stckPK++;
+                ifLineWithOneElement(cells);
 
                 if (stckPK == 44){
                     check = true;
@@ -147,6 +67,95 @@ class ReadIMOEXClass {
 
             }
         }
+    }
+
+    private static void ifLineWithTwoElements(Row cells) {
+        iterator = cells.cellIterator();
+
+        ticker = iterator.next().getStringCellValue();
+        tickerSecond = ticker.substring(ticker.lastIndexOf("\n") + 1);
+        ticker = ticker.substring(0, ticker.lastIndexOf("\n"));
+
+        priceS = iterator.next().getStringCellValue();
+        priceSSecond = priceS.substring(priceS.lastIndexOf("\n") + 1);
+        priceS = priceS.substring(0, priceS.lastIndexOf("\n"));
+
+        Cell cell = iterator.next();
+        try {
+            numStckFirst = cell.getStringCellValue();
+            numStckSecond = numStckFirst.substring(numStckFirst.lastIndexOf("\n") + 1);
+            numStckFirst = numStckFirst.substring(0, numStckFirst.lastIndexOf("\n"));
+        }catch (java.lang.IllegalStateException ex){
+            int d = (int) cell.getNumericCellValue();
+            numStckFirst = d + "";
+            numStckSecond = "";
+        }
+        String s = iterator.next().getStringCellValue();
+        String ss = s.substring(s.lastIndexOf("\n") + 1);
+        s = s.substring(0, s.lastIndexOf("\n"));
+        numStckFirst += s;
+        numStckSecond += ss;
+
+        iteratorNext(3, iterator);
+
+        capStckInIndS = iterator.next().getStringCellValue();
+        capStckInIndSSecond = capStckInIndS.substring(capStckInIndS.lastIndexOf("\n") + 1);
+        capStckInIndS = capStckInIndS.substring(0, capStckInIndS.lastIndexOf("\n"));
+
+        check = false;
+        if (stckPK == 1) {
+            stocks = new ArrayList<>(45);
+            stocksPrices = new ArrayList<>(45);
+            stocksInIndexes = new ArrayList<>(45);
+        }
+
+        formLists(ticker, priceS, capStckInIndS, stckPK);
+        formLists(tickerSecond, priceSSecond, capStckInIndSSecond, ++stckPK);
+        stckPK++;
+    }
+
+    private static void ifLineWithOneElement(Row cells) {
+
+        iterator = cells.cellIterator();
+        //iterator.next();
+        ticker = iterator.next().getStringCellValue();
+
+        Cell cell = iterator.next();
+        try {
+            priceS = cell.getStringCellValue();
+        } catch (java.lang.IllegalStateException ex) {
+            price = cell.getNumericCellValue();
+            priceS = price + "";
+        }
+
+        numStck = readNumStckAll(iterator);
+
+        iteratorNext(2, iterator);
+
+        String dop = "";
+        try {
+            String s = iterator.next().getStringCellValue();
+            if (s.contains(" ")){
+                dop = s.substring(s.lastIndexOf(" "));
+            }
+        }catch (Exception ex){
+        }
+
+        cell = iterator.next();
+        try {
+            capStckInIndS = cell.getStringCellValue();
+        } catch (java.lang.IllegalStateException ex) {
+            capStckInInd = cell.getNumericCellValue();
+            capStckInIndS = capStckInInd + "";
+        }
+
+        capStckInIndS = dop.replaceAll(" ", "") + capStckInIndS;
+        while (capStckInIndS.lastIndexOf(",") != capStckInIndS.indexOf(",")){
+            capStckInIndS = capStckInIndS.replaceFirst(",", "");
+        }
+
+        formLists(ticker, priceS, capStckInIndS, stckPK);
+        stckPK++;
     }
 
     private static void iteratorNext(int i, Iterator<Cell> iterator){

@@ -20,6 +20,14 @@
         select sp_pk, sp_stck_fk, sp_cur_fk, sp_time_set, sp_price from investor_workspace.t_stocks_prices
     </select>
 
+    <select id="selectAllSpIMOEXLast" resultMap="SpMap">
+        select * from (
+                       select sp_pk, sp_stck_fk, sp_cur_fk, sp_time_set, sp_price from investor_workspace.t_stocks_prices
+                       order by sp_time_set desc
+                       limit 45
+                      )  li
+        order by sp_pk
+    </select>
 
     <insert id="insertSp" keyColumn="sp_pk" keyProperty="sp.id" useGeneratedKeys="true"  >
         insert into investor_workspace.t_stocks_prices (sp_stck_fk, sp_cur_fk, sp_time_set, sp_price)

@@ -26,15 +26,14 @@ class WriteIMOEXClass {
 
         if (stocksOld.size() >= 45) {
             for (int i = 0; i < 45; i++) {
-                if (!stocks.get(i).equals(stocksOld.get(i))){
-                    Initial.stockMapper.updateStock(i, stocks.get(i));
+
+                if (!stocks.get(i).getTicker().equals(stocksOld.get(i).getTicker())){
+                    Initial.stockMapper.updateStock(i + 1, stocks.get(i + 1));
+                    Initial.siiMapper.updateSii(i, stocksInIndexes.get(i));
                 }
 
                 Initial.spMapper.insertSp(stocksPrices.get(i));
 
-                if (!stocksInIndexes.get(i).equals(stocksInIndexesOld.get(i))){
-                    Initial.siiMapper.updateSii(i, stocksInIndexes.get(i));
-                }
             }
         }else {
             for (int i = 0; i < 45; i++) {

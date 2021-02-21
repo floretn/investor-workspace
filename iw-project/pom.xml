@@ -12,7 +12,7 @@
         <module>iw-beans</module>
         <module>iw-dao</module>
         <module>iw-download</module>
-        <module>iw-uii</module>
+        <module>iw-ui</module>
     </modules>
 
     <properties>
@@ -86,6 +86,11 @@
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>4.3.1</version>
         </dependency>
     </dependencies>
 
