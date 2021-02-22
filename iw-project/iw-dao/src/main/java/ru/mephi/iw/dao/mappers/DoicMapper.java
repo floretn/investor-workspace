@@ -10,6 +10,12 @@ public interface DoicMapper {
     @Select("select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes where doic_pk = #{id}")
     DateOfIndexesChanges selectDoic(int id);
 
+    @Select("select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes \n" +
+            "where doic_indx_fk = 1\n" +
+            "order by doic_date_chng desc \n" +
+            "limit 1")
+    DateOfIndexesChanges selectDoicIMOEXLast();
+
     @Select("select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes")
     List<DateOfIndexesChanges> selectAllDoic();
 

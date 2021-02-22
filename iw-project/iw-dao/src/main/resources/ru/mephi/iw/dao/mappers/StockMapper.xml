@@ -15,6 +15,10 @@
         select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = #{id}
     </select>
 
+    <select id="selectAllStocksIMOEX" resultMap="StockMap">
+        select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = any (#{ids})
+    </select>
+
     <select id="selectAllStocks" resultMap="StockMap">
         select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks
     </select>

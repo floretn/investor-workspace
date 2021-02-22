@@ -14,6 +14,13 @@
         select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes where doic_pk = #{id}
     </select>
 
+    <select id="selectDoicIMOEXLast" resultMap="DoicMap">
+        select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+        where doic_indx_fk = 1
+        order by doic_date_chng desc
+        limit 1
+    </select>
+
     <select id="selectAllDoic" resultMap="DoicMap">
         select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
     </select>

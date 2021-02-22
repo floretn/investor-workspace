@@ -55,13 +55,8 @@ public class DownloadIMOEXPicture {
         }
 
         String year = calendar.get(Calendar.YEAR) + "";
+        System.out.println(strURL1 + year + month + day + strURL2);
         return strURL1 + year + month + day + strURL2;
-    }
-
-    public static void main(String args[]){
-
-        System.out.println("Press Any Key To Continue...");
-        new java.util.Scanner(System.in).nextLine();
     }
 }
 

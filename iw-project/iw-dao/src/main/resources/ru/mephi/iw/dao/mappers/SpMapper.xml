@@ -23,8 +23,9 @@
     <select id="selectAllSpIMOEXLast" resultMap="SpMap">
         select * from (
                        select sp_pk, sp_stck_fk, sp_cur_fk, sp_time_set, sp_price from investor_workspace.t_stocks_prices
+                       where sp_stck_fk = any (#{idsStck})
                        order by sp_time_set desc
-                       limit 45
+                       limit #{idsStck.lenght}
                       )  li
         order by sp_pk
     </select>

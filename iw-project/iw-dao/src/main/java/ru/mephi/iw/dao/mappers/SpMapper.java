@@ -16,11 +16,12 @@ public interface SpMapper {
 
     @Select("select * from (\n" +
             "               select sp_pk, sp_stck_fk, sp_cur_fk, sp_time_set, sp_price from investor_workspace.t_stocks_prices\n" +
+            "               where sp_stck_fk = any (#{idsStck})" +
             "               order by sp_time_set desc\n" +
             "               limit 45\n" +
             "               )  li\n" +
             "order by sp_pk")
-    List<StocksPrices> selectAllSpLastIMOEX();
+    List<StocksPrices> selectAllSpLastIMOEX(@Param("idsStck") int[] idsStck);
 
     @Insert("insert into investor_workspace.t_stocks_prices (sp_stck_fk, sp_cur_fk, sp_time_set, sp_price)\n" +
             "values (#{sp.stockId}, #{sp.currencyId}, #{sp.settingTime}, #{sp.price});\n" +

@@ -19,9 +19,13 @@ class WriteIMOEXClass {
     static void writeInDB(List<Stock> stocks, List<StocksPrices> stocksPrices, List<StocksInIndexes> stocksInIndexes) {
 
         if (stocksOld == null){
-            stocksOld = Initial.stockMapper.selectAllStocks();
-            stocksPricesOld = Initial.spMapper.selectAllSp();
-            stocksInIndexesOld = Initial.siiMapper.selectAllSii();
+            stocksInIndexesOld = Initial.siiMapper.selectAllSiiIMOEX(Initial.doicMapper.selectDoicIMOEXLast().getId());
+            int[] ids = new int[stocksInIndexesOld.size()];
+            for (int i = 0; i < ids.length; i++) {
+                ids[i] = stocksInIndexesOld.get(i).getStockId();
+            }
+            stocksOld = Initial.stockMapper.selectAllStocksIMOEX(ids);
+            stocksPricesOld = Initial.spMapper.selectAllSpLastIMOEX(ids);
         }
 
         if (stocksOld.size() >= 45) {

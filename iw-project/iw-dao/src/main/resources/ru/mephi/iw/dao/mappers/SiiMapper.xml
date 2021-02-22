@@ -15,6 +15,11 @@
         select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes where sii_pk = #{id}
     </select>
 
+    <select id="selectAllSiiIMOEX" resultMap="SiiMap">
+        select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes
+        where sii_doic_fk = #{idDoic}
+    </select>
+
     <select id="selectAllSii" resultMap="SiiMap">
         select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes
     </select>

@@ -10,6 +10,10 @@ public interface SiiMapper {
     @Select("select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes where sii_pk = #{id}")
     StocksInIndexes selectSii(int id);
 
+    @Select("select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes\n" +
+            "where sii_doic_fk = #{idDoic}")
+    List<StocksInIndexes> selectAllSiiIMOEX(@Param("idDoic") int idDoic);
+
     @Select("select sii_pk, sii_stck_fk, sii_doic_fk, sii_num_stck from investor_workspace.t_stocks_in_indexes")
     List<StocksInIndexes> selectAllSii();
 

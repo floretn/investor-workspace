@@ -23,14 +23,14 @@ import java.util.concurrent.TimeUnit;
 public class Bean implements Serializable {
 
     private String msg;
-    private StockMapper stockMethods;
-    private SpMapper spMethods;
-    private SiiMapper siiMethods;
-    private List<Stock> stocks;
-    private List<StocksPrices> stocksP;
-    private List<StocksInIndexes> stocksI;
-    private List<Helper> helpers;
-    private Thread thread;
+    private static StockMapper stockMethods;
+    private static SpMapper spMethods;
+    private static SiiMapper siiMethods;
+    private static List<Stock> stocks;
+    private static List<StocksPrices> stocksP;
+    private static List<StocksInIndexes> stocksI;
+    private static List<Helper> helpers;
+    private static Thread thread;
 
     public List<Helper> getHelpers() {
         return helpers;
@@ -52,39 +52,47 @@ public class Bean implements Serializable {
     private void init() {
         try {
             //FillClass.fill();
-            stockMethods = Initial.stockMapper;
-            spMethods = Initial.spMapper;
-            siiMethods = Initial.siiMapper;
-            stocks = stockMethods.selectAllStocks();
-            stocksP = spMethods.selectAllSpLastIMOEX();
-            stocksI = siiMethods.selectAllSii();
-            helpers = new ArrayList<Helper>(45);
-            for (int i = 0; i < 45; i++){
-                helpers.add(new Helper());
-                helpers.get(i).stock = stocks.get(i);
-                helpers.get(i).sii = stocksI.get(i);
-                helpers.get(i).sp = stocksP.get(i);
-            }
-            thread = new Thread(() -> {
-                while (true) {
-                    long t1;
-                    long t2;
-                    t1 = System.currentTimeMillis();
-                    try {
-                        FillClass.fill();
-                    } catch (CanNotDeleteFile | IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    t2 = System.currentTimeMillis();
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(86400000 - t2 + t1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            if (helpers == null) {
+                stockMethods = Initial.stockMapper;
+                spMethods = Initial.spMapper;
+                siiMethods = Initial.siiMapper;
+                stocksI = siiMethods.selectAllSiiIMOEX(Initial.doicMapper.selectDoicIMOEXLast().getId());
+                int[] ids = new int[stocksI.size()];
+                for (int i = 0; i < ids.length; i++) {
+                    ids[i] = stocksI.get(i).getStockId();
                 }
-            });
-            thread.start();
+                stocks = stockMethods.selectAllStocksIMOEX(ids);
+                stocksP = spMethods.selectAllSpLastIMOEX(ids);
+
+                helpers = new ArrayList<Helper>(ids.length);
+                for (int i = 0; i < ids.length; i++) {
+                    helpers.add(new Helper());
+                    helpers.get(i).stock = stocks.get(i);
+                    helpers.get(i).sii = stocksI.get(i);
+                    helpers.get(i).sp = stocksP.get(i);
+                }
+                thread = new Thread(() -> {
+                    while (true) {
+                        long t1;
+                        long t2;
+                        t1 = System.currentTimeMillis();
+                        try {
+                            FillClass.fill();
+                        } catch (CanNotDeleteFile | IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        t2 = System.currentTimeMillis();
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(86400000 - t2 + t1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             msg = "Не удалось подключиться к БД:(";
             return;
         }
