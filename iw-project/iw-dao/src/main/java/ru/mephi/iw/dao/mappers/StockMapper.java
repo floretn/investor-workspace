@@ -10,6 +10,9 @@ public interface StockMapper {
     @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = #{id}")
     Stock selectStock(int id);
 
+    @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = #{ticker}")
+    Stock selectStockByTicker(@Param("ticker") String ticker);
+
     @Select("select stck_pk, stck_cmpn_fk, stck_name, stck_ticker from investor_workspace.t_stocks where stck_pk = any (#{ids})")
     List<Stock> selectAllStocksIMOEX(@Param("ids") int[] ids);
 

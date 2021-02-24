@@ -5,7 +5,7 @@ import ru.mephi.iw.dao.mappers.SpMapper;
 import ru.mephi.iw.dao.mappers.StockMapper;
 import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.exceptions.CanNotDeleteFile;
-import ru.mephi.iw.fill.FillClass;
+import ru.mephi.iw.fillIMOEX.FillIMOEXInDB;
 import ru.mephi.iw.models.Stock;
 import ru.mephi.iw.models.StocksInIndexes;
 import ru.mephi.iw.models.StocksPrices;
@@ -36,10 +36,6 @@ public class Bean implements Serializable {
         return helpers;
     }
 
-    public void setHelpers(List<Helper> helpers) {
-        this.helpers = helpers;
-    }
-
     public String getMsg() {
         return msg;
     }
@@ -51,7 +47,6 @@ public class Bean implements Serializable {
     @PostConstruct
     private void init() {
         try {
-            //FillClass.fill();
             if (helpers == null) {
                 stockMethods = Initial.stockMapper;
                 spMethods = Initial.spMapper;
@@ -77,7 +72,7 @@ public class Bean implements Serializable {
                         long t2;
                         t1 = System.currentTimeMillis();
                         try {
-                            FillClass.fill();
+                            FillIMOEXInDB.fill();
                         } catch (CanNotDeleteFile | IOException | InterruptedException e) {
                             e.printStackTrace();
                         }
