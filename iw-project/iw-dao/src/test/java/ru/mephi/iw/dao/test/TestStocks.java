@@ -1,11 +1,16 @@
 package ru.mephi.iw.dao.test;
 
-import ru.mephi.iw.dao.initialization.Initial;
+import org.apache.ibatis.session.SqlSession;
+//import ru.mephi.iw.dao.initialization.Initial;
+//import ru.mephi.iw.dao.mappers.stocks.SpMapper;
+//import ru.mephi.iw.dao.mappers.stocks.StockMapper;
 
 public class TestStocks {
 
     public static void main(String[] args) {
-        System.out.println(Initial.stockMapper.selectAllStocksIMOEX(new int[] {1, 2, 3, 6, 22}));
-        System.out.println(Initial.spMapper.selectAllSpLastIMOEX(new int[0]));
+     //   try (SqlSession sqlSession = Initial.getSqlSessionFactory().openSession()) {
+       //     System.out.println(sqlSession.getMapper(StockMapper.class).selectAllStocksIMOEX(new int[]{1, 2, 3, 6, 22}));
+         //   System.out.println(sqlSession.getMapper(SpMapper.class).selectAllSpLastIMOEX(new int[0]));
+        //}
     }
 }

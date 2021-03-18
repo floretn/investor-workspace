@@ -7,6 +7,8 @@ import java.io.Serializable;
 @Data
 @Builder
 public class Sector implements Serializable{
+    /**sctr_pk*/
     private int idK;
+    /**sctr_name*/
     private String name;
 }

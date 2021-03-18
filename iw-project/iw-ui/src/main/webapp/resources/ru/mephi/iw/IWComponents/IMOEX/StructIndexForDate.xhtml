@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="update"/>
+</composite:interface>
+
+<composite:implementation>
+    <h:form id="structIndexForDate">
+        <p:panel id="sifd">
+            <p:outputLabel value="Дата для структуры индекса"/>
+            <br/>
+            <p:datePicker id="dateForShow" value="#{updateIMOEXBean.dateForIndexStruct}"  required="true"
+                          requiredMessage="Дата обязательна!"/>
+            <br/>
+            <p:commandButton value="Показать структуру индекса" id="showStruct" action="#{updateIMOEXBean.showIndexStruct()}"
+                             ajax="true" icon="fa fa-refresh" update="#{cc.attrs.update}"/>
+        </p:panel>
+    </h:form>
+</composite:implementation>
+</html>

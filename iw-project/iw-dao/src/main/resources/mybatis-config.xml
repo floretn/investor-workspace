@@ -15,14 +15,10 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="ru/mephi/iw/dao/mappers/stocks/CompanyMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/stocks/CurrencyMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/DoicMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/IndexMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/SectorMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/SiiMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/SocMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/SpMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/StockMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/DoicMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/SiiMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/SpMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/StockMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/association/PriceStockInIndexMapper.xml"/>
     </mappers>
 </configuration>

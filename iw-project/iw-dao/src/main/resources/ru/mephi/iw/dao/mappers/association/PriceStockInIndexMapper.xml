@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.association.PriceStockInIndexMapper">
+
+    <resultMap id="PriceStockInIndexMap" type="ru.mephi.iw.models.associations.PriceStockInIndex">
+        <id column="id" property="id"/>
+        <association property="dateOfIndexChange" resultMap="ru.mephi.iw.dao.mappers.stocks.DoicMapper.DoicMap"
+                     javaType="ru.mephi.iw.models.stocks.DateOfIndexesChanges"/>
+        <association property="stockInIndexIMOEX" resultMap="ru.mephi.iw.dao.mappers.stocks.SiiMapper.SiiMap"
+                     javaType="ru.mephi.iw.models.stocks.StocksInIndexes"/>
+        <association property="stockIMOEX" resultMap="ru.mephi.iw.dao.mappers.stocks.StockMapper.StockMap"
+                     javaType="ru.mephi.iw.models.stocks.Stock"/>
+        <association property="stockPriceIMOEX" resultMap="ru.mephi.iw.dao.mappers.stocks.SpMapper.SpMap"
+                     javaType="ru.mephi.iw.models.stocks.StocksPrices"/>
+    </resultMap>
+
+</mapper>

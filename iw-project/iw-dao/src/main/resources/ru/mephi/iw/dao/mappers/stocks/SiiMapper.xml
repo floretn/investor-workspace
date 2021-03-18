@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.stocks.SiiMapper">
+    <resultMap id="SiiMap" type="ru.mephi.iw.models.stocks.StocksInIndexes">
+        <id column="sii_pk" property="id"/>
+        <result column="sii_stck_fk" property="stockId"/>
+        <result column="sii_doic_fk" property="dateOfIndexesChangesId"/>
+        <result column="sii_num_stck" property="numberOfStocksInIndex"/>
+    </resultMap>
+</mapper>

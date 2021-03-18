@@ -7,7 +7,10 @@ import java.io.Serializable;
 @Data
 @Builder
 public class SectorsOfCompanies implements Serializable{
+    /**soc_pk*/
     private int id;
+    /**soc_cmpn_fk*/
     private int companyId;
+    /**soc_sctr_fk*/
     private int sectorId;
 }

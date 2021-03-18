@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.stocks.SpMapper">
+
+    <resultMap id="SpMap" type="ru.mephi.iw.models.stocks.StocksPrices">
+        <id column="sp_pk" property="id"/>
+        <result column="sp_stck_fk" property="stockId"/>
+        <result column="sp_cur_fk" property="currentId"/>
+        <result column="sp_time_set" property="settingTime"/>
+        <result column="sp_price" property="price"/>
+    </resultMap>
+</mapper>

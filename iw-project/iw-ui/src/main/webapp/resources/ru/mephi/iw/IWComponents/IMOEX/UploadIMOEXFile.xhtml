@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+
+    <h:form enctype="multipart/form-data">
+        <p:panel id="uif">
+            <p:fileUpload value="#{updateIMOEXBean.file}"  mode="simple" skinSimple="true"/>
+            <br/>
+            <p:commandButton ajax="false" action="#{updateIMOEXBean.uploadFile()}" value="Отправить на сервер"/>
+        </p:panel>
+    </h:form>
+</composite:implementation>
+</html>
