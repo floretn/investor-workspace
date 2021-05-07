@@ -1,22 +1,21 @@
 package ru.mephi.iw.download.fillIMOEX;
 
+import org.springframework.stereotype.Component;
 import ru.mephi.iw.exceptions.IwRuntimeException;
-
 import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
-public class DownloadIMOEXPicture {
+@Component
+class DownloadIMOEXPicture {
 
-    private DownloadIMOEXPicture() {
-    }
-
-    static File downloadIndexGif() {
+    public File downloadIndexGif(Date date) {
         File fileGif;
         try {
             fileGif = File.createTempFile("Picture_With_IMOEX_Data", ".gif");
-            try (InputStream in = (new URL(getURL())).openStream();
+            try (InputStream in = (new URL(getURL(date))).openStream();
                  OutputStream writer = new FileOutputStream(fileGif)) {
                 byte[] buffer = new byte[1024];
                 int c;
@@ -31,9 +30,9 @@ public class DownloadIMOEXPicture {
         return fileGif;
     }
 
-    private static String getURL(){
+    private String getURL(Date date){
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1);
+        calendar.setTime(date);
         return "https://informer.moex.com/ru/index/constituents-IMOEX-" +
                 (new SimpleDateFormat("yyyyMMdd")).format(calendar.getTime()) +
                 ".gif?page=0";

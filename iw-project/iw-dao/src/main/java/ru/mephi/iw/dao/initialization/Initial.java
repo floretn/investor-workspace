@@ -12,7 +12,7 @@ public class Initial {
     private Initial() {
     }
 
-    private static final SqlSessionFactory SQL_SESSION_FACTORY;
+    public static final SqlSessionFactory SQL_SESSION_FACTORY;
 
     static {
         try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml")) {
@@ -20,9 +20,5 @@ public class Initial {
         } catch (IOException e) {
             throw new IwRuntimeException("Не найден файл конфигурации взаимодействия с Базой Данных", e);
         }
-    }
-
-    public static SqlSessionFactory getSqlSessionFactory() {
-        return SQL_SESSION_FACTORY;
     }
 }

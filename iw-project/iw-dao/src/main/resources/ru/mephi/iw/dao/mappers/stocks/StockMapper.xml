@@ -9,4 +9,13 @@
         <result column="stck_name" property="name"/>
         <result column="stck_ticker" property="ticker"/>
     </resultMap>
+
+    <select id="selectStockByTicker" resultMap="StockMap">
+        select * from investor_workspace.t_stocks where stck_ticker = #{ticker}
+    </select>
+
+    <insert id="insertStock" useGeneratedKeys="true" keyProperty="id" keyColumn="stck_pk">
+        insert into investor_workspace.t_stocks (stck_cmpn_fk, stck_name, stck_ticker)
+        values (#{stock.companyId}, #{stock.name}, #{stock.ticker});
+    </insert>
 </mapper>

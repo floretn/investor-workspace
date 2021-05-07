@@ -1,0 +1,11 @@
+.parent
+{
+    height: 200px;
+}
+.child
+{
+    height: 190px;
+    border: 1px solid black;
+    display: inline-block;
+    width: 33%;
+}

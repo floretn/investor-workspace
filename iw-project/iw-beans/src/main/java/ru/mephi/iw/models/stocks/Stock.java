@@ -3,9 +3,11 @@ package ru.mephi.iw.models.stocks;
 import lombok.*;
 import java.io.Serializable;
 
-/**investor-workspace.t_stocks*/
+/**investor_workspace.t_stocks*/
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Stock implements Serializable{
     /**stck_pk*/
     private int id;

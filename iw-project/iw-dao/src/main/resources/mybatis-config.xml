@@ -19,6 +19,7 @@
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/SiiMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/SpMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/StockMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/association/PriceStockInIndexMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/IwuMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/PriceStockInIndexMapper.xml"/>
     </mappers>
 </configuration>

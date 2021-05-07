@@ -4,9 +4,11 @@ import lombok.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-/**investor-workspace.t_stocks_prices*/
+/**investor_workspace.t_stocks_prices*/
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StocksPrices implements Serializable{
     /**sp_pk*/
     private int id;

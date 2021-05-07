@@ -1,8 +1,12 @@
 package ru.mephi.iw.download.fillIMOEX;
 
-import javafx.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.stereotype.Component;
+import ru.mephi.iw.constants.CurrencyKeys;
 import ru.mephi.iw.exceptions.IwRuntimeException;
-import ru.mephi.iw.models.associations.PriceStockInIndex;
+import ru.mephi.iw.models.stocks.associations.PriceStockInIndex;
 import ru.mephi.iw.models.stocks.Stock;
 import ru.mephi.iw.models.stocks.StocksInIndexes;
 import ru.mephi.iw.models.stocks.StocksPrices;
@@ -14,75 +18,75 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class ReadIMOEXFromFile {
+@Component
+class ReadIMOEXFromFile {
 
     /**Количсество колонок, которые нужно пропустить после считывания цены, чтобы начать считывать капитализацию*/
     private static final int NUM_COLUMNS_BETWEEN_PRICE_AND_CAP = 5;
+    /**Количество без одной колонок в таблице*/
+    private static final int NUM_COLUMNS_IN_TABLE = 9;
+    /**
+     * Логгер. Предполагается, что конфигурация для логгирования предоставляется сервером приложений.
+     * Например на сервере Tomcat должен лежать файл logback.xml с конфигурацией в папке %TOMCAT_HOME%/lib
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReadIMOEXFromFile.class);
 
-    private ReadIMOEXFromFile() {
-    }
+    public List<PriceStockInIndex> readXlsx(File xlsxFile, Timestamp timeSet) throws IOException {
 
-    static List<PriceStockInIndex> readXlsx(File xlsxFile) throws IOException {
-
+        LOGGER.info("Начинаю чтение xlsx файла по адресу " + xlsxFile.getAbsolutePath());
+        
         List<PriceStockInIndex> stocksAndPricesIMOEX = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1);
-        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
 
         try(XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(xlsxFile))) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             String checkS;
-            int numColumnToMiss = 0;
 
             for (Row cells : sheet) {
 
-                /*Таблица может начинаться либо с первой, либо со второй колонки.
-                * В первом блоке try пытаюсь считать ячейку в первой колонке, в блоке catch пытаюсь считать вторую колонку.
-                * Если обе колонки не считываются - значит таблица начинается и не с первой строки.
-                * В этом случае переход к следующей итерации цикла - то есть к следующей строке.
-                * Плюсом - запоминаю необходимое количество итерация для использования в методах в переменную columnNumberWhereTableStart.
-                */
+                /* Таблица может начинаться либо с первой, либо со второй колонки.
+                 * В первом блоке try пытаюсь считать ячейку в первой колонке, в блоке catch пытаюсь считать вторую колонку.
+                 * Если обе колонки не считываются - значит таблица начинается и не с первой строки.
+                 * В этом случае переход к следующей итерации цикла - то есть к следующей строке.
+                 * Плюсом - запоминаю необходимое количество итерация для использования в методах в переменную columnNumberWhereTableStart.
+                 */
                 try {
-                    checkS = cells.getCell(0).getStringCellValue();
+                    checkS = cells.iterator().next().getStringCellValue();
                     if (checkS.equals("Nei Namibia")){
-                        throw new IwRuntimeException("Данные индекса не были обновлены на сайте Московской Биржи...");
+                        throw new IwRuntimeException("Данные индекса не были обновлены на сайте Московской Биржи в этот день...");
                     }
-                } catch (java.lang.IllegalStateException ex) {
-                    try {
-                        checkS = cells.getCell(1).getStringCellValue();
-                        numColumnToMiss = 1;
-                    } catch (java.lang.IllegalStateException ex1) {
-                        continue;
-                    }
+                    /*
+                     * Если не могу прочитать 9 столбцов подряд => эта строка не относится к таблице с данными.
+                     */
+                    iteratorNext(NUM_COLUMNS_IN_TABLE, cells.cellIterator());
+                } catch (Exception ex) {
+                    continue;
                 }
 
-                if (checkS.isEmpty() || checkS.length() <= 3) {
+                if (checkS.isEmpty() || checkS.length() < 3 || checkS.equals("\\PL+")) {
                     continue;
                 }
 
                 if (checkS.contains("\n")) {
-
                     Pair<PriceStockInIndex, PriceStockInIndex> pair =
-                            ifLineWithTwoElements(numColumnToMiss, cells, timestamp);
+                            ifLineWithTwoElements(cells, timeSet);
                     stocksAndPricesIMOEX.add(pair.getKey());
                     stocksAndPricesIMOEX.add(pair.getValue());
-
                     continue;
                 }
 
-                stocksAndPricesIMOEX.add(ifLineWithOneElement(numColumnToMiss, cells, timestamp));
+                stocksAndPricesIMOEX.add(ifLineWithOneElement(cells, timeSet));
 
             }
         }
         return stocksAndPricesIMOEX;
     }
 
-    private static Pair<PriceStockInIndex, PriceStockInIndex> ifLineWithTwoElements
-                                            (int numColumnToMiss, Row cells, Timestamp timestamp) {
+    private Pair<PriceStockInIndex, PriceStockInIndex> ifLineWithTwoElements (Row cells,
+                                                                                     Timestamp timestamp) {
 
+        LOGGER.info("Считываю линию с двумя элементами");
+        
         Iterator<Cell> iterator = cells.cellIterator();
-        iteratorNext(numColumnToMiss, iterator);
 
         String ticker = iterator.next().getStringCellValue();
         String tickerSecond = ticker.substring(ticker.lastIndexOf("\n") + 1);
@@ -95,7 +99,7 @@ public class ReadIMOEXFromFile {
 
         iteratorNext(NUM_COLUMNS_BETWEEN_PRICE_AND_CAP, iterator);
 
-        /*Если капитализация в индексе слишком большая, то она распадается на две ячейки.
+        /* Если капитализация в индексе слишком большая, то она распадается на две ячейки.
          * Для считывания информации из первой ячейки предназначена переменная dop
          */
         String dop = "";
@@ -112,18 +116,23 @@ public class ReadIMOEXFromFile {
                 dop = s.substring(s.lastIndexOf(" "));
             }
         }catch (Exception ex){
+            /* Слишком большое число для капитализации распадается на две ячейки таблицы и попадает в первую из этих ячеек через пробел
+             * от коэффициента, ограничивающего вес акции в индексе.
+             * Если первую из двух ячеек не получается считать как строку => в ней не содержится числа, относящегося к капитализации.
+             * Такая ошибка игнорируется.
+             */
         }
 
         String capStckInIndS = iterator.next().getStringCellValue();
         String capStckInIndSSecond = capStckInIndS.substring(capStckInIndS.lastIndexOf("\n") + 1);
         capStckInIndS = capStckInIndS.substring(0, capStckInIndS.lastIndexOf("\n"));
 
-        return new Pair<>(formPriceStockInIndexForCertainDate(ticker, priceS, capStckInIndS, dop, timestamp),
+        return Pair.of(formPriceStockInIndexForCertainDate(ticker, priceS, capStckInIndS, dop, timestamp),
                 formPriceStockInIndexForCertainDate(tickerSecond, priceSSecond, capStckInIndSSecond, dopSecond, timestamp));
 
     }
 
-    private static PriceStockInIndex formPriceStockInIndexForCertainDate(String ticker, String priceS,
+    private PriceStockInIndex formPriceStockInIndexForCertainDate(String ticker, String priceS,
                                                                          String capStckInIndS, String dop, Timestamp timestamp) {
         capStckInIndS = dop + capStckInIndS;
         capStckInIndS = capStckInIndS.replaceAll(":", ",");
@@ -137,17 +146,22 @@ public class ReadIMOEXFromFile {
                 replaceAll(",", ".").replaceAll(" ", ""));
         double price = Double.parseDouble(priceS.replaceAll(",", ".").replaceAll(" ", ""));
         long numStckInIndex = (long) (capStckInIndex / price);
-
-        return new PriceStockInIndex(0, null,
-                StocksInIndexes.builder().dateOfIndexesChangesId(1).numberOfStocksInIndex(numStckInIndex).build(),
-                Stock.builder().companyId(null).ticker(ticker).build(), StocksPrices.builder().currencyId(1).
+        
+        PriceStockInIndex priceStockInIndex = new PriceStockInIndex(0, null,
+                StocksInIndexes.builder().numberOfStocksInIndex(numStckInIndex).build(),
+                Stock.builder().companyId(null).ticker(ticker).build(), StocksPrices.builder().currencyId(CurrencyKeys.RUBLES_KEY).
                 settingTime(timestamp).price(price).build());
+
+        LOGGER.info("Считал строку из файла: " + priceStockInIndex);
+        
+        return priceStockInIndex;
     }
 
-    private static PriceStockInIndex ifLineWithOneElement(int numColumnToMiss, Row cells, Timestamp timestamp) {
+    private PriceStockInIndex ifLineWithOneElement(Row cells, Timestamp timestamp) {
+        
+        LOGGER.info("Считываю линию с одним элементом");
 
         Iterator<Cell> iterator = cells.cellIterator();
-        iteratorNext(numColumnToMiss, iterator);
 
         String ticker = iterator.next().getStringCellValue();
 
@@ -173,6 +187,11 @@ public class ReadIMOEXFromFile {
                 dop = s.substring(s.lastIndexOf(" "));
             }
         }catch (Exception ex){
+            /* Слишком большое число для капитализации распадается на две ячейки таблицы и попадает в первую из этих ячеек через пробел
+             * от коэффициента, ограничивающего вес акции в индексе.
+             * Если первую из двух ячеек не получается считать как строку => в ней не содержится числа, относящегося к капитализации.
+             * Такая ошибка игнорируется.
+             */
         }
 
         cell = iterator.next();
@@ -186,7 +205,7 @@ public class ReadIMOEXFromFile {
         return formPriceStockInIndexForCertainDate(ticker, priceS, capStckInIndS, dop, timestamp);
     }
 
-    private static void iteratorNext(int i, Iterator<Cell> iterator){
+    private void iteratorNext(int i, Iterator<Cell> iterator){
         for (int j = 1; j <= i; j++){
             iterator.next();
         }

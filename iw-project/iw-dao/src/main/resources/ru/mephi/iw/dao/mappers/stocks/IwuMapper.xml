@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.stocks.IwuMapper">
+    <resultMap id="IwuMap" type="ru.mephi.iw.models.stocks.IndexWasUpload">
+        <id column="iwu_pk" property="id"/>
+        <result column="iwu_indx_fk" property="indexId"/>
+        <result column="iwu_date" property="date"/>
+        <result column="iwu_check" property="check"/>
+    </resultMap>
+
+    <select id="selectIwu" resultMap="IwuMap">
+        select * from investor_workspace.t_index_was_upload where iwu_indx_fk = #{indexId} and iwu_date = #{date}
+    </select>
+
+    <insert id="insertIwu" useGeneratedKeys="true" keyProperty="id" keyColumn="iwu_pk">
+        insert into investor_workspace.t_index_was_upload (iwu_indx_fk, iwu_date, iwu_check)
+        values (#{iwu.indexId}, #{iwu.date}, #{iwu.check});
+    </insert>
+
+</mapper>

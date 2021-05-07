@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.stocks.association.PriceStockInIndexMapper">
+
+    <resultMap id="PriceStockInIndexMap" type="ru.mephi.iw.models.stocks.associations.PriceStockInIndex">
+        <id column="stck_pk" property="id"/>
+        <association property="dateOfIndexChange" resultMap="ru.mephi.iw.dao.mappers.stocks.DoicMapper.DoicMap"/>
+        <association property="stockInIndex" resultMap="ru.mephi.iw.dao.mappers.stocks.SiiMapper.SiiMap"
+                     javaType="ru.mephi.iw.models.stocks.StocksInIndexes"/>
+        <association property="stock" resultMap="ru.mephi.iw.dao.mappers.stocks.StockMapper.StockMap"
+                     javaType="ru.mephi.iw.models.stocks.Stock"/>
+        <association property="stockPrice" resultMap="ru.mephi.iw.dao.mappers.stocks.SpMapper.SpMap"
+                     javaType="ru.mephi.iw.models.stocks.StocksPrices"/>
+    </resultMap>
+
+    <select id="selectLastStocksPricesForIndex" resultMap="PriceStockInIndexMap">
+        select *
+        from
+            (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+             where doic_indx_fk = #{indexId}
+             order by doic_date_chng
+             limit 1) sd
+        left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
+        left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
+        left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk)
+        where sp.sp_time_set = (select sp_time_set
+                                from
+                                    (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+                                     where doic_indx_fk = #{indexId}
+                                     order by doic_date_chng
+                                     limit 1) sd
+                                left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
+                                left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
+                                left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk)
+                                order by sp.sp_time_set desc
+                                limit 1)
+    </select>
+
+    <select id="selectStocksPricesForIndexOnPeriod" resultMap="PriceStockInIndexMap">
+        select *
+        from
+           (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+               where doic_indx_fk = #{indexId} and doic_date_chng <![CDATA[<]]> #{before}
+               order by doic_date_chng desc
+            limit 1) sd
+        left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
+        left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
+        left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk)
+        where sp.sp_time_set > #{from} and sp.sp_time_set <![CDATA[<]]> #{before}
+    </select>
+
+    <select id="selectLastStocksPricesForIndexBeforeDate" resultMap="PriceStockInIndexMap">
+        select *
+        from
+           (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+           where doic_indx_fk = #{indexId}
+           order by doic_date_chng 
+           limit 1) sd
+        left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk) 
+        left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk) 
+        left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk) 
+        where sp.sp_time_set = (select sp_time_set
+                                   from
+                                       (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+                                       where doic_indx_fk = #{indexId}
+                                       order by doic_date_chng 
+                                       limit 1) sd
+                                   left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk) 
+                                   left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk) 
+                                   left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk) 
+                                   where sp.sp_time_set <![CDATA[<]]> #{before}
+                                   order by sp.sp_time_set desc
+                                   limit 1)
+    </select>
+    
+    <select id="selectFirstStocksPricesForIndexAfterDate" resultMap="PriceStockInIndexMap">
+        select *
+        from
+             (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+                where doic_indx_fk = #{indexId}
+                order by doic_date_chng
+                limit 1) sd
+        left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
+        left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
+        left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk)
+        where sp.sp_time_set = (select sp_time_set
+                                    from
+                                       (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
+                                           where doic_indx_fk = #{indexId}
+                                           order by doic_date_chng
+                                        limit 1) sd
+                                    left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
+                                    left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
+                                    left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk)
+                                    where sp.sp_time_set > #{from}
+                                    order by sp.sp_time_set desc
+                                    limit 1)
+    </select>
+
+</mapper>

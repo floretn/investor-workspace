@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tp = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/IMOEX"
+      xmlns:imc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/IMOEX"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html">
 
-<h:head>
-    <title>Download IMOEX</title>
-</h:head>
+    <h:head>
+        <title>Download IMOEX</title>
+    </h:head>
 
-<h:body>
-    <tp:DownloadIMOEXAuto/>
-    <tp:UploadIMOEXFile/>
-    <tp:StructIndexForDate update="tableStructIMOEX:IMOEXTableForm:table"/>
-    <tp:IMOEXTable id="tableStructIMOEX"/>
-</h:body>
+    <h:body>
+        <h:outputStylesheet name="css/InlineThreeElements.css"/>
+        <h:outputStylesheet name="css/Center.css"/>
+
+        <div class="parent">
+
+            <div class="child">
+                <div class="center">
+                    <imc:DownloadIMOEXAuto/>
+                </div>
+            </div>
+
+            <div class="child">
+                <div class="center">
+                <imc:UploadIMOEXFile/>
+                </div>
+            </div>
+
+            <div class="child">
+                <div class="center">
+                <imc:StructIndexForDate update="tableStructIMOEX:IndexTableForm:table"/>
+                </div>
+            </div>
+
+        </div>
+
+        <mc:IndexTable id="tableStructIMOEX" list="#{updateIMOEXBean.priceStockInIndices}"
+                       index="IMOEX"
+                       date="#{updateIMOEXBean.priceStockInIndices.get(0).dateOfIndexChange.dateOfChange}"/>
+
+    </h:body>
 </html>

@@ -2,11 +2,12 @@ package ru.mephi.iw.models.stocks;
 
 import lombok.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 
-/**investor-workspace.t_date_of_indexes_changes*/
+/**investor_workspace.t_date_of_indexes_changes*/
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class DateOfIndexesChanges implements Serializable{
     /**doic_pk*/
@@ -14,5 +15,5 @@ public class DateOfIndexesChanges implements Serializable{
     /**doic_indx_fk*/
     private int indexId;
     /**doic_date_chng*/
-    private Date dateOfChange;
+    private LocalDate dateOfChange;
 }

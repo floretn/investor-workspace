@@ -1,7 +1,5 @@
 package ru.mephi.iw.dao.test;
 
-import org.apache.ibatis.session.SqlSession;
-//import ru.mephi.iw.dao.initialization.Initial;
 //import ru.mephi.iw.dao.mappers.stocks.SpMapper;
 //import ru.mephi.iw.dao.mappers.stocks.StockMapper;
 

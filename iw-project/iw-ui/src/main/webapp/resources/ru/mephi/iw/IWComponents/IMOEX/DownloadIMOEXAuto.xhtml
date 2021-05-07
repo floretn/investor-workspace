@@ -10,15 +10,30 @@
 
 <composite:implementation>
     <h:form id="downloadAutoForm">
-        <p:panel id="dia">
-            <p:outputLabel for="trust_the_price" value="Доверять считываемой цене и капитализации?"/>
-            <p:selectOneRadio id="trust_the_price" value="#{updateIMOEXBean.trustThePrice}">
-                <f:selectItem itemLabel="Нет" itemValue="#{false}"/>
-                <f:selectItem itemLabel="Да" itemValue="#{true}"/>
-            </p:selectOneRadio>
-            <p:commandButton value="Загрузить индекс Московской Биржи" id="download" action="#{updateIMOEXBean.downloadIMOEX()}"
-                             ajax="true" icon="fa fa-download" />
-        </p:panel>
+        <p:outputLabel value="Дата для загрузки индекса"/>
+        <br/>
+        <p:datePicker id="dateForShow" value="#{updateIMOEXBean.dateForUpload}"  required="true"
+                      requiredMessage="Дата обязательна!"/>
+        <br/>
+        <p:outputLabel for="trust_the_price" value="Доверять считываемой цене и капитализации?"/>
+        <p:selectOneRadio id="trust_the_price" value="#{updateIMOEXBean.trustInfo}">
+            <f:selectItem itemLabel="Нет" itemValue="#{false}"/>
+            <f:selectItem itemLabel="Да" itemValue="#{true}"/>
+        </p:selectOneRadio>
+        <p:commandButton value="Загрузить индекс Московской Биржи" id="download" action="#{updateIMOEXBean.downloadIMOEX()}"
+                         ajax="true" icon="fa fa-download" />
+        <br/>
+
+        <p:commandButton action="#{updateIMOEXBean.checkFile}" update="msgs" icon="fa fa-arrow-down"
+                         value="Скачать файл с сервера"
+                         oncomplete="if(args &amp;&amp; !args.validationFailed) PF('downloadFile').jq.click();"/>
+
+        <p:commandButton ajax="false" style="visibility: hidden" widgetVar="downloadFile">
+            <p:fileDownload value="#{updateIMOEXBean.createFile()}" contentDisposition="attachment"/>
+        </p:commandButton>
+
+        <p:growl id="msgs" showDetail="false"/>
+
     </h:form>
 </composite:implementation>
 </html>

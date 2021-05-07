@@ -8,4 +8,15 @@
         <result column="doic_indx_fk" property="indexId"/>
         <result column="doic_date_chng" property="dateOfChange"/>
     </resultMap>
+
+    <insert id="insertDoic" useGeneratedKeys="true" keyProperty="id" keyColumn="doic_pk">
+        insert into investor_workspace.t_date_of_indexes_changes (doic_indx_fk, doic_date_chng)
+        values (#{doic.indexId}, #{doic.dateOfChange});
+    </insert>
+
+    <update id="updateDoic">
+        update investor_workspace.t_date_of_indexes_changes
+        set doic_indx_fk = #{doic.indexId}, doic_date_chng = #{doic.dateOfChange}
+        where doic_pk = #{id};
+    </update>
 </mapper>

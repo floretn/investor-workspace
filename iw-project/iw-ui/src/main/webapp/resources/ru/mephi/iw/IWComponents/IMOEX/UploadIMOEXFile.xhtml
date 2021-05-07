@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html  xmlns = "http://www.w3.org/1999/xhtml"
        xmlns:h = "http://java.sun.com/jsf/html"
-       xmlns:f="http://xmlns.jcp.org/jsf/core"
        xmlns:p="http://primefaces.org/ui"
        xmlns:composite = "http://java.sun.com/jsf/composite">
 
@@ -9,13 +8,24 @@
 </composite:interface>
 
 <composite:implementation>
+        <h:outputStylesheet name="css/StyleForFileUploadBtn.css"/>
+        <h:form id="fileUpload"  enctype="multipart/form-data">
 
-    <h:form enctype="multipart/form-data">
-        <p:panel id="uif">
-            <p:fileUpload value="#{updateIMOEXBean.file}"  mode="simple" skinSimple="true"/>
-            <br/>
-            <p:commandButton ajax="false" action="#{updateIMOEXBean.uploadFile()}" value="Отправить на сервер"/>
-        </p:panel>
-    </h:form>
+                <p:growl id="messages" showDetail="false"/>
+
+                <p:outputLabel value="Дата для загрузки индекса из файла"/>
+                <br/>
+                <p:datePicker id="dateForShow" value="#{updateIMOEXBean.dateForUploadFile}"  required="true"
+                              requiredMessage="Дата обязательна!"/>
+                <br/>
+                <div class="hide">
+                        <p:outputLabel for="fu" value="Выбрать файл"/>
+                </div>
+                <p:fileUpload id="fu" value="#{updateIMOEXBean.downloadFile}" mode="simple" skinSimple="true"/>
+                <br/>
+                <p:commandButton ajax="false" action="#{updateIMOEXBean.uploadFile()}" value="Отправить на сервер"
+                                 icon="fa fa-arrow-up"/>
+        </h:form>
 </composite:implementation>
+
 </html>
