@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+    <h:form id="hat">
+
+        <p:menubar>
+            <p:submenu label="Администратору">
+                <p:submenu label="Загрузка индексов">
+                    <p:menuitem value="Индекс Московской Биржи"
+                                onclick="location.assign('ru/mephi/iw/IMOEX/DownloadIMOEX.xhtml')"/>
+                </p:submenu>
+            </p:submenu>
+
+            <p:submenu label="Инвестору">
+            </p:submenu>
+
+            <f:facet name="options">
+                <p:outputLabel value="#{auth.username}"/>
+                <p:commandButton value="#{auth.status}" icon="#{auth.icon}"
+                                 action="#{auth.loginLogout()}" update="hat"/>
+            </f:facet>
+
+        </p:menubar>
+    </h:form>
+</composite:implementation>
+</html>

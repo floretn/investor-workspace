@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+    <h:form>
+
+        <div class="center">
+            <div class="bubble">Заполните данные регистрации пользователя</div>
+        </div>
+
+        <br/>
+
+        <div class="center">
+
+            <p:panel id="insertUser">
+
+                <div class="bubble">Фамилия</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_lastName" value="#{registration.userNew.lastName}" required="true"
+                                 requiredMessage="Фамилия обязательна!">
+                        <f:validateLength minimum="2"/>
+                        <p:clientValidator event="change" update="msgs"/>
+                    </p:inputText>
+                </span>
+
+                <div class="bubble">Имя</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_firstName" value="#{registration.userNew.firstName}" required="true"
+                                 requiredMessage="Имя обязательно!">
+                        <f:validateLength minimum="4"/>
+                        <p:clientValidator event="change" update="msgs"/>
+                    </p:inputText>
+                </span>
+
+                <div class="bubble">Отчество</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_patronymic" value="#{registration.userNew.patronymic}"/>
+                </span>
+
+                <div class="bubble">Телефон</div>
+                <br/>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_phone" value="#{registration.userNew.phone}"/>
+                    <p:outputLabel for="@previous" value="+7XXXXXXXXXX"/>
+                </span>
+
+                <div class="bubble">Email</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_email" value="#{registration.userNew.email}"/>
+                </span>
+
+                <div class="bubble">Псевдоним</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_userName" value="#{registration.userNew.username}" required="true"
+                                 requiredMessage="Имя пользователя обязательно!">
+                        <f:validateLength minimum="4"/>
+                        <p:clientValidator event="change" update="msgs"/>
+                    </p:inputText>
+                </span>
+
+                <div class="bubble">Логин</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_login" value="#{registration.authInfoNew.login}" required="true"
+                                 requiredMessage="Логин обязателен!">
+                        <f:validateLength minimum="4"/>
+                        <p:clientValidator event="change" update="msgs"/>
+                    </p:inputText>
+                </span>
+
+                <div class="bubble">Пароль</div>
+                <span class="ui-float-label">
+                    <p:password id="float-upsert_pwd" value="#{registration.pwdNew}" required="true"
+                                requiredMessage="Пароль обязателен!">
+                        <f:validateLength minimum="4"/>
+                        <p:clientValidator event="change" update="msgs"/>
+                    </p:password>
+                </span>
+
+                <div class="bubble">Повторите пароль</div>
+                <span class="ui-float-label">
+                    <p:password id="float-upsert_pwd1" value="#{registration.pwd1New}" required="true"
+                                requiredMessage="Повторить пароль обязательно!">
+                        <f:validateLength minimum="4"/>
+                        <p:clientValidator event="change" update="msgs"/>
+                    </p:password>
+                </span>
+
+                <br/>
+                <p:commandButton value="Зарегестрироваться" id="reg" process="@all"
+                                 action="#{registration.insertUser()}" ajax="true"
+                                 icon="fa fa-check" update="insertUser"/>
+
+            </p:panel>
+        </div>
+    </h:form>
+</composite:implementation>
+</html>

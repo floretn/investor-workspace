@@ -20,6 +20,9 @@
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/SpMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/StockMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/IwuMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/AuthInfoMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/PagesMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/UserMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/PriceStockInIndexMapper.xml"/>
     </mappers>
 </configuration>

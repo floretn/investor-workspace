@@ -7,6 +7,9 @@
     <param-value>Development</param-value>
   </context-param>
 
+  <welcome-file-list>
+    <welcome-file>ru/mephi/iw/auth_pages/Auth.xhtml</welcome-file>
+  </welcome-file-list>
   <locale-config>
     <default-locale>ru</default-locale>
     <supported-locale>ru</supported-locale>

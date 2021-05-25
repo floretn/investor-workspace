@@ -1,16 +1,16 @@
-package ru.mephi.iw.models;
+package ru.mephi.iw.models.auth;
 
 import lombok.*;
 import java.io.Serializable;
 
-/**investor_workspace.t_currency*/
+/**investor_workspace.t_roles*/
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Currency implements Serializable{
-    /**cur_pk*/
+public class Roles implements Serializable {
+    /**rol_pk*/
     private int id;
-    /**cur_name*/
+    /**rol_name*/
     private String name;
 }

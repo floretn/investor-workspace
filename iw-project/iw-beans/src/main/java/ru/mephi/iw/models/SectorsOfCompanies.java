@@ -6,6 +6,8 @@ import java.io.Serializable;
 /**investor_workspace.t_sectors_of_companies*/
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SectorsOfCompanies implements Serializable{
     /**soc_pk*/
     private int id;

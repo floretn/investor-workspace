@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.AuthInfoMapper">
+    <resultMap id="AuthInfoMap" type="ru.mephi.iw.models.auth.AuthInfo">
+        <id column="ai_pk" property="id"/>
+        <result column="ai_usr_fk" property="userId"/>
+        <result column="ai_login" property="login"/>
+        <result column="ai_pwd" property="pwd"/>
+    </resultMap>
+
+    <select id="selectAuthInfo" resultMap="AuthInfoMap">
+        select * from investor_workspace.t_auth_info where ai_login = #{login}
+    </select>
+
+    <insert id="insertAuthInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="ai_pk">
+        insert into investor_workspace.t_auth_info (ai_usr_fk, ai_login, ai_pwd)
+        values (#{authInfo.userId}, #{authInfo.login}, #{authInfo.pwd});
+    </insert>
+
+    <update id="updateAuthInfo">
+        update investor_workspace.t_auth_info
+        set ai_usr_fk = #{authInfo.userId}, ai_login = #{authInfo.login}, ai_pwd = #{authInfo.pwd}
+        where ai_pk = #{id};
+    </update>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.PagesMapper">
+    <resultMap id="PagesMap" type="ru.mephi.iw.models.auth.Pages">
+        <id column="pg_pk" property="id"/>
+        <result column="pg_path" property="path"/>
+    </resultMap>
+
+    <select id="selectPages" resultMap="PagesMap">
+        select * from investor_workspace.t_pages where pg_fk = #{id}
+    </select>
+
+</mapper>

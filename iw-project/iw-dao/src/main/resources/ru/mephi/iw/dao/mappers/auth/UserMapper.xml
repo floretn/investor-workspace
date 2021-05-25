@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.UserMapper">
+    <resultMap id="UserMap" type="ru.mephi.iw.models.auth.User">
+        <id column="usr_pk" property="id"/>
+        <result column="usr_lnm" property="lastName"/>
+        <result column="usr_fnm" property="firstName"/>
+        <result column="usr_ptrnm" property="patronymic"/>
+        <result column="usr_phn" property="phone"/>
+        <result column="usr_email" property="email"/>
+        <result column="usr_un" property="username"/>
+    </resultMap>
+
+    <select id="selectUser" resultMap="UserMap">
+        select * from investor_workspace.t_users where usr_pk = #{id}
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" keyColumn="usr_pk">
+        insert into investor_workspace.t_users (usr_lnm, usr_fnm, usr_ptrnm, usr_phn, usr_email, usr_un)
+        values (#{user.lastName}, #{user.firstName}, #{user.patronymic}, #{user.phone}, #{user.email}, #{user.username});
+    </insert>
+
+    <update id="updateUser">
+        update investor_workspace.t_users
+        set usr_lnm = #{user.lastName}, usr_fnm = #{user.firstName}, usr_ptrnm = #{user.patronymic},
+            usr_phn = #{user.phone}, usr_email = #{user.email}, usr_un = #{user.username}
+        where usr_pk = #{id};
+    </update>
+</mapper>
