@@ -14,6 +14,10 @@
         select * from investor_workspace.t_auth_info where ai_login = #{login}
     </select>
 
+    <select id="selectAuthInfoOfUser" resultMap="AuthInfoMap">
+        select * from investor_workspace.t_auth_info where ai_usr_fk = #{userId}
+    </select>
+
     <insert id="insertAuthInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="ai_pk">
         insert into investor_workspace.t_auth_info (ai_usr_fk, ai_login, ai_pwd)
         values (#{authInfo.userId}, #{authInfo.login}, #{authInfo.pwd});
@@ -24,4 +28,9 @@
         set ai_usr_fk = #{authInfo.userId}, ai_login = #{authInfo.login}, ai_pwd = #{authInfo.pwd}
         where ai_pk = #{id};
     </update>
+
+    <delete id="deleteAuthInfo">
+        delete from investor_workspace.t_auth_info where ai_pk = #{id}
+    </delete>
+
 </mapper>

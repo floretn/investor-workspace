@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:mc="http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="pwd"/>
+    <composite:attribute name="pwd1"/>
+    <composite:attribute name="onclick"/>
+</composite:interface>
+
+<composite:implementation>
+    <div class="bubble">Новый пароль</div>
+    <span class="ui-float-label">
+        <p:password id="float-upsert_pwd" value="#{cc.attrs.pwd}" required="true"
+                    requiredMessage="Пароль обязателен!"/>
+    </span>
+
+    <div class="bubble">Повторите пароль</div>
+    <span class="ui-float-label">
+        <p:password id="float-upsert_pwd1" value="#{cc.attrs.pwd1}" required="true"
+                    requiredMessage="Повторить пароль обязательно!"/>
+    </span>
+
+    <p:commandButton ajax="true" value="Изменить пароль"
+                     icon="fa fa-pencil" onclick="#{cc.attrs.onclick}"
+                     style="margin: 5px 5px 5px 0px;"/>
+</composite:implementation>
+</html>

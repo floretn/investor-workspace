@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="update"/>
+</composite:interface>
+
+<composite:implementation>
+    <h:form id="form">
+
+        <h:outputStylesheet name="css/Center.css"/>
+
+        <div class="center">
+
+            <p:panel id="updateUser">
+
+                <h2>Личные данные</h2>
+
+                <div class="bubble">Ваши роли: #{profile.rolesOfUserS}</div>
+
+                <br/>
+                <br/>
+
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_lastName" value="#{profile.user.lastName}" required="true"
+                                 requiredMessage="Фамилия обязательна!"/>
+                    <p:outputLabel for="@previous" value="Фамилия"/>
+                </span>
+
+                <br/>
+                <br/>
+
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_firstName" value="#{profile.user.firstName}" required="true"
+                                 requiredMessage="Имя обязательно!"/>
+                    <p:outputLabel for="@previous" value="Имя"/>
+                </span>
+
+                <br/>
+                <br/>
+
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_patronymic" value="#{profile.user.patronymic}"/>
+                    <p:outputLabel for="@previous" value="Отчество"/>
+                </span>
+
+                <br/>
+                <br/>
+
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_phone" value="#{profile.user.phone}"/>
+                    <p:outputLabel for="@previous" value="+7XXXXXXXXXX"/>
+                </span>
+
+                <br/>
+                <br/>
+
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_email" value="#{profile.user.email}"/>
+                    <p:outputLabel for="@previous" value="Email"/>
+                </span>
+
+                <br/>
+                <br/>
+
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_userName" value="#{profile.user.username}" required="true"
+                                 requiredMessage="Имя пользователя обязательно!"/>
+                    <p:outputLabel for="@previous" value="Псевдоним"/>
+                </span>
+
+                <p:commandButton ajax="false" action="#{profile.updateUser()}" value="Изменить"
+                                 icon="fa fa-pencil" update="#{cc.attrs.update}"
+                                 style="margin: 5px 5px 5px 0px;"/>
+                <p:commandButton onclick="PF('deleteDlg').show();" value="Удалить аккаунт"
+                                 icon="fa fa-trash"
+                                 style="margin: 5px 5px 5px 0px;"/>
+
+            </p:panel>
+        </div>
+
+        <p:dialog header="Удаление аккаунта" widgetVar="deleteDlg" height="75">
+            <div class="center">
+                <div class="bubble">Вы уверены, что хотите удалить свой аккаунт?</div>
+            </div>
+            <div class="center">
+                <p:commandButton value="Да" action="#{profile.deleteUser()}" ajax="true"
+                                 icon="fa fa-check" style="margin: 5px 5px 5px 0px;"/>
+                <p:commandButton value="Отмена" ajax="true"
+                                 icon="fa fa-ban" update="form"/>
+            </div>
+        </p:dialog>
+    </h:form>
+</composite:implementation>
+</html>

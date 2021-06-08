@@ -1,10 +1,10 @@
 .parent
 {
-    height: 200px;
+    height: 220px;
 }
 .child
 {
-    height: 190px;
+    height: 210px;
     border: 1px solid black;
     display: inline-block;
     width: 33%;

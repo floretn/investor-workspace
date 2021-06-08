@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.collections.UsersInfoForAdminMapper">
+
+    <resultMap id="UserInfoForAdminMap" type="ru.mephi.iw.models.auth.collections.UsersInfoForAdmin">
+        
+        <id column="usr_pk" property="id"/>
+        
+        <association property="user" resultMap="ru.mephi.iw.dao.mappers.auth.UserMapper.UserMap"
+                    javaType="ru.mephi.iw.models.auth.User"/>
+
+        <collection property="authInfo" javaType="java.util.HashSet" ofType="ru.mephi.iw.models.auth.AuthInfo"
+                    resultMap="ru.mephi.iw.dao.mappers.auth.AuthInfoMapper.AuthInfoMap"/>
+
+        <collection property="rolesOfUser" javaType="java.util.HashSet" ofType="ru.mephi.iw.models.auth.RolesOfUsers"
+                    resultMap="ru.mephi.iw.dao.mappers.auth.ROUMapper.ROUMap"/>
+
+    </resultMap>
+
+    <select id="selectUserInfo" resultMap="UserInfoForAdminMap">
+        select  *
+        from investor_workspace.t_users u
+                 left join investor_workspace.t_auth_info ai on (ai.ai_usr_fk = u.usr_pk)
+                 left join investor_workspace.t_roles_of_users rou on (rou.rou_usr_fk = u.usr_pk)
+    </select>
+
+</mapper>

@@ -13,7 +13,7 @@
 <composite:implementation>
     <h:outputStylesheet name="css/TextStyle.css"/>
     <h:form id="IndexTableForm">
-        <div id="bubble">Индекс: #{cc.attrs.index}, Дата ребалансировки: #{cc.attrs.date}</div>
+        <div class="bubble">Индекс: #{cc.attrs.index}, Дата ребалансировки: #{cc.attrs.date}</div>
         <p:dataTable id="table" var="psii" value="#{cc.attrs.list}">
             <p:column headerText="id">
                 <h:outputText value="#{psii.id}"/>

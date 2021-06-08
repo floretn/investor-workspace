@@ -8,7 +8,6 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.file.UploadedFile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.mephi.iw.ui.auth_pages.Auth;
 import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.dao.mappers.stocks.association.PriceStockInIndexMapper;
 import ru.mephi.iw.download.FillIndexInDB;
@@ -17,7 +16,6 @@ import ru.mephi.iw.exceptions.IwRuntimeException;
 import ru.mephi.iw.models.stocks.associations.PriceStockInIndex;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.*;
 import java.sql.Timestamp;
@@ -49,7 +47,7 @@ public class UpdateIMOEXBean implements Serializable {
     transient private FillIndexInDB fillIndexInDB;
 
     @PostConstruct
-    private void init() throws IOException {
+    private void init() {
         trustInfo = false;
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
             priceStockInIndices = sqlSession.getMapper(PriceStockInIndexMapper.class).

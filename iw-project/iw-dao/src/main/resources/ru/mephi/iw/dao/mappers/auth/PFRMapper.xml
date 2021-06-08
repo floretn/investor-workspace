@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.PFRMapper">
+    <resultMap id="PFRMap" type="ru.mephi.iw.models.auth.PagesForRoles">
+        <id column="pfr_pk" property="id"/>
+        <result column="pfr_pg_fk" property="pageId"/>
+        <result column="pfr_rol_fk" property="roleId"/>
+    </resultMap>
+
+    <select id="selectPFR" resultMap="PFRMap">
+        select * from investor_workspace.t_pages_for_roles where pfr_rol_fk = #{roleId}
+    </select>
+</mapper>

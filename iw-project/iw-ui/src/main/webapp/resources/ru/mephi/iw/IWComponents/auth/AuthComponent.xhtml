@@ -11,14 +11,16 @@
     <h:form>
         <div class="center">
                 <span class="ui-float-label">
-                    <p:inputText id="log" value="#{auth.login}"/>
+                    <p:inputText id="log" value="#{auth.login}"
+                                 style="margin: 5px 5px 5px 0px;"/>
                     <p:outputLabel value="Логин" for="@previous"/>
                 </span>
                 <span class="ui-float-label">
-                    <p:password id="pwd" value="#{auth.password}" />
+                    <p:password id="pwd" value="#{auth.password}"/>
                     <p:outputLabel for="@previous" value="Пароль"/>
                 </span>
-                <p:commandButton value="Вход" action="#{auth.checkLogin}" update="growl"/>
+                <p:commandButton value="Вход" action="#{auth.checkLogin}" update="growl"
+                                 style="margin: 5px 5px 5px 5px;"/>
                 <p:commandButton value="Регистрация" action="#{auth.registration()}"/>
         </div>
     </h:form>

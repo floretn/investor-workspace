@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc="http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Настройки безопасности</title>
+</h:head>
+
+<h:body>
+    <h:outputStylesheet name="css/Center.css"/>
+    <mc:Hat/>
+    <p:growl id="growl" showDetail="true" />
+
+    <div class="center">
+        <p:panel>
+            <h:form id="formLog">
+
+                <p:growl id="growlLog" showDetail="true" />
+
+                <div class="bubble">Новый логин</div>
+                <span class="ui-float-label">
+                    <p:inputText id="float-upsert_login" value="#{ss.login}" required="true"
+                                 requiredMessage="Логин обязателен!"/>
+                </span>
+                <p:commandButton ajax="true" value="Изменить логин"
+                                 icon="fa fa-pencil" onclick="PF('updateLogDlg').show();"
+                                 style="margin: 5px 5px 5px 0px;"/>
+
+                <p:dialog header="Изменение логина" widgetVar="updateLogDlg" height="100">
+                    <mc:CheckPwd action="#{ss.updateLog()}" update="formLog" pwd="#{ss.pwdOld}" />
+                </p:dialog>
+
+            </h:form>
+
+            <br/>
+
+            <h:form id="formPwd">
+
+                <p:growl id="growlPwd" showDetail="true" />
+
+                <mc:TwoPwd pwd="#{ss.pwd}" pwd1="#{ss.pwd1}" onclick="PF('updatePwdDlg').show();"/>
+
+                <p:dialog header="Изменение пароля" widgetVar="updatePwdDlg" height="100">
+                    <mc:CheckPwd action="#{ss.updatePwd()}" update="formPwd" pwd="#{ss.pwdOld}" />
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </div>
+
+</h:body>
+</html>

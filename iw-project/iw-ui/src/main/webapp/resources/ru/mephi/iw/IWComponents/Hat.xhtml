@@ -12,21 +12,28 @@
     <h:form id="hat">
 
         <p:menubar>
+
             <p:submenu label="Администратору">
                 <p:submenu label="Загрузка индексов">
                     <p:menuitem value="Индекс Московской Биржи"
-                                onclick="location.assign('ru/mephi/iw/IMOEX/DownloadIMOEX.xhtml')"/>
+                                action="#{auth.goToDownIMOEX()}"/>
                 </p:submenu>
+                <p:menuitem value="Пользователи" icon="fa fa-users"
+                            action="#{auth.goToUsersView()}"/>
             </p:submenu>
 
             <p:submenu label="Инвестору">
             </p:submenu>
 
-            <f:facet name="options">
-                <p:outputLabel value="#{auth.username}"/>
-                <p:commandButton value="#{auth.status}" icon="#{auth.icon}"
-                                 action="#{auth.loginLogout()}" update="hat"/>
-            </f:facet>
+            <p:submenu label="#{auth.username}" icon="fa fa-home" style="float:right">
+                <p:menuitem value="Профиль" action="#{auth.goToProfile()}" icon="fa fa-user"/>
+                <p:submenu label="Настройки" icon="fa fa-wrench">
+                    <p:menuitem value="Настройки безопасности"
+                                action="#{auth.goToSafetySettings()}"/>
+                </p:submenu>
+                <p:menuitem value="#{auth.status}" icon="#{auth.icon}"
+                            action="#{auth.loginLogout()}" update="hat"/>
+            </p:submenu>
 
         </p:menubar>
     </h:form>

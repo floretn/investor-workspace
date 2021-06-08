@@ -17,6 +17,14 @@
         select * from investor_workspace.t_users where usr_pk = #{id}
     </select>
 
+    <select id="selectAllUsers" resultMap="UserMap">
+        select * from investor_workspace.t_users
+    </select>
+
+    <select id="selectUserByUN" resultMap="UserMap">
+        select * from investor_workspace.t_users where usr_un = #{userName}
+    </select>
+
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" keyColumn="usr_pk">
         insert into investor_workspace.t_users (usr_lnm, usr_fnm, usr_ptrnm, usr_phn, usr_email, usr_un)
         values (#{user.lastName}, #{user.firstName}, #{user.patronymic}, #{user.phone}, #{user.email}, #{user.username});
@@ -28,4 +36,8 @@
             usr_phn = #{user.phone}, usr_email = #{user.email}, usr_un = #{user.username}
         where usr_pk = #{id};
     </update>
+
+    <delete id="deleteUser">
+        delete from investor_workspace.t_users where usr_pk = #{id}
+    </delete>
 </mapper>

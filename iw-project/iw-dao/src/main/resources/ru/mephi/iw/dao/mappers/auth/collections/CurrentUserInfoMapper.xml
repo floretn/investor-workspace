@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.collections.CurrentUserInfoMapper">
+
+    <resultMap id="CurrentUserInfoMap" type="ru.mephi.iw.models.auth.collections.CurrentUserInfo">
+
+        <id column="usr_pk" property="id"/>
+
+        <association property="authInfo" resultMap="ru.mephi.iw.dao.mappers.auth.AuthInfoMapper.AuthInfoMap"
+                     javaType="ru.mephi.iw.models.auth.AuthInfo"/>
+
+        <association property="user" resultMap="ru.mephi.iw.dao.mappers.auth.UserMapper.UserMap"
+                     javaType="ru.mephi.iw.models.auth.User"/>
+
+        <collection property="rolesOfUser" javaType="java.util.HashSet" ofType="ru.mephi.iw.models.auth.Roles"
+                    resultMap="ru.mephi.iw.dao.mappers.auth.RolesMapper.RolesMap"/>
+
+        <collection property="pagesOfUser" javaType="java.util.HashSet" ofType="ru.mephi.iw.models.auth.Pages"
+                    resultMap="ru.mephi.iw.dao.mappers.auth.PagesMapper.PagesMap"/>
+
+    </resultMap>
+
+    <select id="selectCurrentUserInfo" resultMap="CurrentUserInfoMap">
+        select  usr_pk, usr_lnm, usr_fnm, usr_ptrnm, usr_phn, usr_email, usr_un, ai_pk, ai_usr_fk, ai_login, ai_pwd, rol_pk, rol_name, pg_pk, pg_path
+        from investor_workspace.t_users u
+                 left join investor_workspace.t_auth_info ai on (ai.ai_usr_fk = u.usr_pk)
+                 left join investor_workspace.t_roles_of_users rou on (rou.rou_usr_fk = u.usr_pk)
+                 left join investor_workspace.t_roles r on (rou.rou_rol_fk = r.rol_pk)
+                 left join investor_workspace.t_pages_for_roles pfr on (pfr.pfr_rol_fk = r.rol_pk)
+                 left join investor_workspace.t_pages p on (pfr.pfr_pg_fk = p.pg_pk)
+        where ai.ai_login = #{login} and ai.ai_pwd = #{pwd} and rou.rou_status = true
+    </select>
+
+</mapper>

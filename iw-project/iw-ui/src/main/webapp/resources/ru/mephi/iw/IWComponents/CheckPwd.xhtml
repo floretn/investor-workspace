@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="pwd"/>
+    <composite:attribute name="action" method-signature="void method()"/>
+    <composite:attribute name="update"/>
+    <composite:attribute name="onclick"/>
+</composite:interface>
+
+<composite:implementation>
+
+        <div class="center">
+            <div class="bubble" style="margin: 0px 5px 5px 5px;">Введите текущий пароль для изменения данных</div>
+            <span class="ui-float-label">
+                <p:password id="float-upsert_pwdOldPwdDlg" value="#{cc.attrs.pwd}"/>
+            </span>
+        </div>
+        <div class="center" >
+            <p:commandButton value="Принять изменения" ajax="true" update="#{cc.attrs.update}" onclick="#{cc.attrs.onclick}"
+                             icon="fa fa-check" action="#{cc.attrs.action}"
+                             style="margin: 5px 5px 5px 5px;"/>
+            <p:commandButton value="Отмена" ajax="true" onclick="#{cc.attrs.onclick}"
+                             icon="fa fa-ban" update="#{cc.attrs.update}"
+                             style="margin: 5px 5px 5px 0px;"/>
+        </div>
+
+</composite:implementation>
+</html>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:mc="http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="update"/>
+    <composite:attribute name="onclickDel"/>
+</composite:interface>
+
+<composite:implementation>
+
+        <h:outputStylesheet name="css/TextStyle.css"/>
+
+        <p:growl id="growl" showDetail="true" />
+
+        <p:panel>
+            <p:commandButton id="search" value="Критерии поиска" icon="fa fa-search"
+                             style="margin: 0px 5px 5px 0px;"/>
+            <p:commandButton id="refresh" value="Обновить" icon="fa fa-refresh" action="#{usersView.updateData()}"/>
+        </p:panel>
+        <br/>
+
+        <p:overlayPanel for="search" style="width:350px">
+
+            <br/>
+            <span class="ui-float-label">
+                <p:inputText value="#{usersView.username}"/>
+                <p:outputLabel for="@previous" value="Псевдоним"/>
+            </span>
+
+            <br/>
+            <span class="ui-float-label">
+                <p:inputText value="#{usersView.lastName}"/>
+                <p:outputLabel for="@previous" value="Фамилия"/>
+            </span>
+
+            <br/>
+            <span class="ui-float-label">
+                <p:inputText value="#{usersView.firstName}"/>
+                <p:outputLabel for="@previous" value="Имя"/>
+            </span>
+
+            <br/>
+            <span class="ui-float-label">
+                <p:inputText value="#{usersView.patronymic}"/>
+                <p:outputLabel for="@previous" value="Отчество"/>
+            </span>
+
+            <br/>
+            <span class="ui-float-label">
+                <p:inputText value="#{usersView.phone}"/>
+                <p:outputLabel for="@previous" value="+7XXXXXXXXXX"/>
+            </span>
+
+            <br/>
+            <span class="ui-float-label">
+                <p:inputText value="#{usersView.email}"/>
+                <p:outputLabel for="@previous" value="email"/>
+            </span>
+
+            <div class="p-field p-col-12 p-md-4">
+                <br/>
+                <p:selectOneMenu id="option" value="#{usersView.role}">
+                    <f:selectItem itemLabel="Роли" itemValue="#{-1}"/>
+                    <f:selectItem itemLabel="Инвестор" itemValue="#{usersView.indexUser}"/>
+                    <f:selectItem itemLabel="Администратор" itemValue="#{usersView.indexAdmin}"/>
+                    <f:selectItem itemLabel="Без роли" itemValue="#{0}"/>
+                </p:selectOneMenu>
+            </div>
+
+            <br/>
+            <p:commandButton icon="fa fa-search" action="#{usersView.updateUserList}"
+                             update="#{cc.attrs.update}"
+                             style="margin: 0px 5px 5px 0px;"/>
+            <p:commandButton icon="fa fa-trash" action="#{usersView.trash}" update="#{cc.attrs.update}"/>
+        </p:overlayPanel>
+
+        <p:dataView id="dw" var="currentUserInfo" value="#{usersView.usersInfo}" rows="12" paginator="true"
+                    rowsPerPageTemplate="6,12,21"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    gridIcon="fa fa-th-large" listIcon="fa fa-bars">
+
+            <p:dataViewGridItem>
+                <p:panel>
+                    <div style="float: right" class="bubble"><u>#{currentUserInfo.user.username}</u></div>
+                    <div class="currentUserInfo.user-grid-item card border-1">
+
+                        <div class="bubble">#{currentUserInfo.user.lastName} #{currentUserInfo.user.firstName} #{currentUserInfo.user.patronymic}</div>
+                        #{currentUserInfo.user.phone}
+                        <br/>
+                        #{currentUserInfo.user.email}
+                        <br/>
+                        <p:commandButton icon="fa fa-pencil"
+                                         style="margin: 0px 5px 5px 0px;"/>
+                        <p:commandButton icon="fa fa-trash" />
+
+                    </div>
+                </p:panel>
+            </p:dataViewGridItem>
+
+            <p:dataViewListItem>
+                <p:panel>
+
+                    <div style="float: right" class="bubble"><u>#{currentUserInfo.user.username}</u></div>
+
+                    <div class="currentUserInfo.user-grid-item card border-1">
+
+                        <div class="bubble">#{currentUserInfo.user.lastName} #{currentUserInfo.user.firstName} #{currentUserInfo.user.patronymic}</div>
+                        #{currentUserInfo.user.phone}
+                        <br/>
+                        #{currentUserInfo.user.email}
+                        <br/>
+                        <p:commandButton action="#{usersView.prepareForUpdate(currentUserInfo)}" icon="fa fa-pencil"
+                                         style="margin: 0px 5px 5px 0px;"/>
+                        <p:commandButton icon="fa fa-trash" action="#{usersView.prepareForDelete(currentUserInfo)}"
+                                         onclick="#{cc.attrs.onclickDel}"/>
+                    </div>
+
+                </p:panel>
+            </p:dataViewListItem>
+
+        </p:dataView>
+
+</composite:implementation>
+</html>

@@ -9,7 +9,7 @@
     </resultMap>
 
     <select id="selectPages" resultMap="PagesMap">
-        select * from investor_workspace.t_pages where pg_fk = #{id}
+        select * from investor_workspace.t_pages where pg_pk = #{id}
     </select>
 
 </mapper>

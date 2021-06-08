@@ -21,14 +21,15 @@
             <f:selectItem itemLabel="Да" itemValue="#{true}"/>
         </p:selectOneRadio>
         <p:commandButton value="Загрузить индекс Московской Биржи" id="download" action="#{updateIMOEXBean.downloadIMOEX()}"
-                         ajax="true" icon="fa fa-download" />
+                         ajax="true" icon="fa fa-download"
+                         style="margin: 5px 5px 5px 0px;" />
         <br/>
 
         <p:commandButton action="#{updateIMOEXBean.checkFile}" update="msgs" icon="fa fa-arrow-down"
                          value="Скачать файл с сервера"
                          oncomplete="if(args &amp;&amp; !args.validationFailed) PF('downloadFile').jq.click();"/>
 
-        <p:commandButton ajax="false" style="visibility: hidden" widgetVar="downloadFile">
+        <p:commandButton ajax="false" style="visibility: hidden;" widgetVar="downloadFile">
             <p:fileDownload value="#{updateIMOEXBean.createFile()}" contentDisposition="attachment"/>
         </p:commandButton>
 

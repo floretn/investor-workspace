@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mcv = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/views"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Управление пользователями</title>
+</h:head>
+
+<h:body id="bodyBag">
+
+    <mc:Hat/>
+    <p:growl id="growl" showDetail="true" />
+
+    <h:form id="formSearch">
+        <p:growl id="growl" showDetail="true" />
+        <mcv:UsersSearch update="formSearch" onclickDel="PF('deleteUserDlg').show();"/>
+    </h:form>
+
+    <h:form id="formDeleteDlg">
+        <h:outputStylesheet name="css/TextStyle.css"/>
+        <h:outputStylesheet name="css/Center.css"/>
+
+        <p:growl id="growl" showDetail="true" />
+
+        <p:dialog header="Удаление пользователя" widgetVar="deleteUserDlg" height="100">
+            <mc:CheckPwd action="#{usersView.deleteUser()}"  update="formSearch"
+                         pwd="#{usersView.pwdOld}" onclick="PF('deleteUserDlg').hide();"/>
+        </p:dialog>
+    </h:form>
+</h:body>
+</html>

@@ -4,6 +4,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:mcp = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/profile"
       xmlns:h="http://java.sun.com/jsf/html">
 
     <h:head>
@@ -11,6 +12,8 @@
     </h:head>
 
     <h:body>
-        <mc:Hat/>
+        <p:growl id="growl" showDetail="true" />
+        <mc:Hat id="hat"/>
+        <mcp:ProfileComponent update="hat"/>
     </h:body>
 </html>

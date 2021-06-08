@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mcv = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/views"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Изменение данных пользователя</title>
+</h:head>
+
+<h:body id="bodyBag">
+
+    <mc:Hat/>
+    <p:growl id="growl" showDetail="true" />
+
+    <h:outputStylesheet name="css/Center.css"/>
+    <div class="center">
+        <p:panel>
+            <h:form id="formUpdateRoles">
+
+                <h:outputStylesheet name="css/TextStyle.css"/>
+
+                <p:growl id="growl" showDetail="true" />
+
+                <br/>
+
+                <div class="bubble">Администратор</div>
+                <p:toggleSwitch value="#{userInfoChange.adminRole.status}"/>
+                <div class="bubble">Инвестор</div>
+                <p:toggleSwitch value="#{userInfoChange.userRole.status}"/>
+                <br/>
+
+                <p:commandButton value="Установить роли" onclick="PF('updateUserRolesDlg').show();"/>
+
+                <p:dialog header="Изменение ролей пользователя" widgetVar="updateUserRolesDlg" height="100">
+                    <mc:CheckPwd action="#{userInfoChange.updateUserRoles()}"  update="formUpdateRoles"
+                                 pwd="#{userInfoChange.pwdOld}"/>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="formUpdatePwd">
+                <h:outputStylesheet name="css/TextStyle.css"/>
+                <p:growl id="growl" showDetail="true" />
+
+                <br/>
+                <div class="bubble">Для логина</div>
+                <div class="p-field p-col-12 p-md-4">
+                    <p:selectOneMenu id="login" value="#{userInfoChange.login}">
+                        <f:selectItem itemLabel="Выбрать" itemValue=""/>
+                        <f:selectItems value="#{userInfoChange.logins}"/>
+                    </p:selectOneMenu>
+                </div>
+
+                <mc:TwoPwd pwd="#{userInfoChange.pwd}" pwd1="#{userInfoChange.pwd1}" onclick="PF('updateUserPwdDlg').show();"/>
+
+                <p:dialog header="Изменение пароля пользователя" widgetVar="updateUserPwdDlg" height="100">
+                    <mc:CheckPwd action="#{userInfoChange.updateUserPwd()}"  update="formUpdatePwd"
+                                 pwd="#{userInfoChange.pwdOld}"/>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </div>
+</h:body>
+</html>

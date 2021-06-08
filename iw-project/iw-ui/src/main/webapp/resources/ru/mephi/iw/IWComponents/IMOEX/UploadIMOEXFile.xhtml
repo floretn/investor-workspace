@@ -21,7 +21,8 @@
                 <div class="hide">
                         <p:outputLabel for="fu" value="Выбрать файл"/>
                 </div>
-                <p:fileUpload id="fu" value="#{updateIMOEXBean.downloadFile}" mode="simple" skinSimple="true"/>
+                <p:fileUpload id="fu" value="#{updateIMOEXBean.downloadFile}" mode="simple" skinSimple="true"
+                              style="margin: 5px 5px 5px 0px;"/>
                 <br/>
                 <p:commandButton ajax="false" action="#{updateIMOEXBean.uploadFile()}" value="Отправить на сервер"
                                  icon="fa fa-arrow-up"/>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.auth.ROUMapper">
+    <resultMap id="ROUMap" type="ru.mephi.iw.models.auth.RolesOfUsers">
+        <id column="rou_pk" property="id"/>
+        <result column="rou_usr_fk" property="userId"/>
+        <result column="rou_rol_fk" property="roleId"/>
+        <result column="rou_status" property="status"/>
+    </resultMap>
+
+    <select id="selectROU" resultMap="ROUMap">
+        select * from investor_workspace.t_roles_of_users where rou_usr_fk = #{userId}
+    </select>
+
+    <insert id="insertROU" useGeneratedKeys="true" keyProperty="id" keyColumn="rou_pk">
+        insert into investor_workspace.t_roles_of_users (rou_usr_fk, rou_rol_fk, rou_status)
+        values (#{rou.userId}, #{rou.roleId}, #{rou.status});
+    </insert>
+
+    <insert id="updateROUStatus">
+        update investor_workspace.t_roles_of_users
+        set rou_status = #{rou.status}
+        where rou_pk = #{id};
+    </insert>
+
+    <delete id="deleteROU">
+        delete from investor_workspace.t_roles_of_users where rou_pk = #{id}
+    </delete>
+</mapper>

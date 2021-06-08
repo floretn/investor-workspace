@@ -23,6 +23,11 @@
         <mapper resource="ru/mephi/iw/dao/mappers/auth/AuthInfoMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/PagesMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/UserMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/RolesMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/PFRMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/ROUMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/collections/UsersInfoForAdminMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/auth/collections/CurrentUserInfoMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/PriceStockInIndexMapper.xml"/>
     </mappers>
 </configuration>
