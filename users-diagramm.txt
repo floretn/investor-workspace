@@ -1,0 +1,55 @@
+@startuml
+
+entity "t_users" as users {
+	*usr_pk : int <<generated>>
+    	--
+	*usr_lnm : varchar
+	*usr_fnm : varchar
+	*usr_ptrnm : varchar
+	*usr_phn : varchar
+	*usr_email : varchar
+	*usr_un : varchar
+}
+
+entity "t_roles" as roles {
+	*rol_pk : int <<generated>>
+    	--
+	*rol_name : varchar
+}
+
+entity "t_roles_of_users" as rou {
+	*rou_pk : int <<generated>>
+    	--
+	*rou_usr_fk : int <<FK>>
+	*rou_rol_fk : int <<FK>>	
+	*rou_status : boolean
+}
+
+entity "t_auth_info" as ai {
+	*ai_pk : int <<generated>>
+    	--
+	*ai_usr_fk : int <<FK>>
+	*ai_login : varchar
+	*ai_pwd : varchar 	
+}
+
+entity "t_pages" as pages {
+	*pg_pk : int <<generated>>
+    	--
+	*pg_path : varchar
+}
+
+entity "t_pages_for_roles" as pfr {
+	*pfr_pk : int <<generated>>
+    	--
+	*pfr_pg_fk : int <<FK>>
+	*pfr_rol_fk : int <<FK>>
+}
+ 
+users ||--o{ rou
+roles ||--o{ rou
+roles ||--o{ pfr
+users ||--o{ ai
+pages ||--o{ pfr
+
+@enduml
