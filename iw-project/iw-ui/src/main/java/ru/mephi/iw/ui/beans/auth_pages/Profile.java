@@ -82,7 +82,7 @@ public class Profile implements Serializable {
             check = false;
         }
 
-        if (!user.getEmail().matches("[0-9a-zA-Z]+@[a-z]+\\.[a-z]+")) {
+        if (!user.getEmail().matches(".+@[a-z]+\\.[a-z]+")) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Email введён неправильно!");
             check = false;

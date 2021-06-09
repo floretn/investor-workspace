@@ -78,7 +78,7 @@ public class Registration implements Serializable {
             check = false;
         }
 
-        if (!userNew.getEmail().matches("[0-9a-zA-Z]+@[a-z]+\\.[a-z]+")) {
+        if (!userNew.getEmail().matches(".+@[a-z]+\\.[a-z]+")) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Email введён неправильно!");
             check = false;

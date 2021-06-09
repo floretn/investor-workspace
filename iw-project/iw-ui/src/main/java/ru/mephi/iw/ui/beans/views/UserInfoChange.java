@@ -34,7 +34,7 @@ public class UserInfoChange implements Serializable {
     private RolesOfUsers adminRole;
     private RolesOfUsers userRole;
 
-    private String login;
+    private String login = "";
     private List<String> logins;
 
     private String pwdOld;
@@ -66,6 +66,12 @@ public class UserInfoChange implements Serializable {
             return;
         }
 
+        if (login.equals("")) {
+            addMessage(FacesMessage.SEVERITY_WARN,
+                    "Предупреждение!", "Выберите логин пользователя!");
+            return;
+        }
+
         AuthInfo authInfo = null;
         for (AuthInfo ai : user.getAuthInfo()) {
             if (ai.getLogin().equals(login)) {
@@ -76,7 +82,7 @@ public class UserInfoChange implements Serializable {
 
         if (authInfo == null) {
             addMessage(FacesMessage.SEVERITY_WARN,
-                    "Предупреждение!", "Такой логин у пользователя был удалён!");
+                    "Предупреждение!", "Такой логин у пользователя не существует! \nВозможно, только что был удалён");
             return;
         }
         authInfo.setPwd(pwdCoder.encodePwd(pwd));
