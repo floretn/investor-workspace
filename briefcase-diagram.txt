@@ -1,0 +1,79 @@
+@startuml
+
+entity "t_users" as users {
+	*usr_pk : int <<generated>>
+    	--
+	*usr_lnm : varchar
+	*usr_fnm : varchar
+	*usr_ptrnm : varchar
+	*usr_phn : varchar
+	*usr_email : varchar
+	*usr_un : varchar
+}
+
+entity "t_stocks" as stocks {
+	*stck_pk : int <<generated>>
+    	--
+	*stck_cmpn_fk : int <<FK>>
+	*stck_name : varchar	
+	*stck_ticker : varchar	
+	*stck_num : int
+	*stck_num_plan : int
+}
+
+entity "t_briefcases" as briefcases {
+	*brf_pk : int <<generated>>
+    	--
+	*brf_usr_fk : int <<FK>>
+	*brf_name : varchar	
+	*brf_desc : varchar
+}
+
+entity "t_files" as files {
+	*fl_pk : int <<generated>>
+    	--
+	*fl_name : varchar
+	*fl_date_dwn : date
+	*fl_content : bytea	
+}
+
+entity "t_briefcase_states" as bs {
+	*bs_pk : int <<generated>>
+    	--
+	*bs_brf_fk : int <<FK>>
+	*bs_fl_fk : int <<FK>>
+	*bs_date : date		
+}
+
+entity "t_stocks_in_briefcases" as sib {
+	*sib_pk : int <<generated>>
+    	--
+	*sib_bs_fk : int <<FK>>
+	*sib_stck_fk : int <<FK>>
+	*sib_stck_num : bigint		
+}
+
+entity "t_account" as acc {
+	*acc_pk : int <<generated>>
+    	--
+	*acc_bs_fk : int <<FK>>
+	*acc_cur_fk : int <<FK>>
+	*acc_am : numeric	
+	*acc_type : varchar	
+}
+
+entity "t_currency" as cur {
+	*cur_pk : int <<generated>>
+    	--	
+	*cur_name : varchar	
+}
+ 
+users ||--o{ briefcases
+briefcases ||--o{ bs
+stocks ||--o{ sib
+files ||--o{ bs
+bs ||--o{ sib
+bs ||--o{ acc
+cur ||--o{ acc
+
+@enduml
