@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.stocks.association.SAPMapper">
+
+    <resultMap id="SAPMap" type="ru.mephi.iw.models.stocks.associations.StockAndPrice">
+
+        <id column="stck_pk" property="id"/>
+
+        <association property="stock" resultMap="ru.mephi.iw.dao.mappers.stocks.StockMapper.StockMap"
+                     javaType="ru.mephi.iw.models.stocks.Stock"/>
+
+        <association property="stockPrice" resultMap="ru.mephi.iw.dao.mappers.stocks.SpMapper.SpMap"
+                     javaType="ru.mephi.iw.models.stocks.StocksPrices"/>
+
+        <association property="currencyOfPrice" resultMap="ru.mephi.iw.dao.mappers.CurrencyMapper.CurrencyMap"
+                     javaType="ru.mephi.iw.models.Currency"/>
+    </resultMap>
+
+</mapper>

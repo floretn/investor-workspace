@@ -1,7 +1,5 @@
 package ru.mephi.iw.ui.filters;
 
-import ru.mephi.iw.ui.beans.auth_pages.Auth;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +8,7 @@ import java.io.IOException;
 
 @WebFilter
 public class LoginFilter implements Filter {
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -21,9 +20,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        Auth auth = (Auth) request.getSession().getAttribute("auth");
-
-        if (auth == null || !auth.isCheck()) {
+        if (request.getSession().getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/ru/mephi/iw/auth_pages/Auth.xhtml");
             return;
         }

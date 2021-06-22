@@ -58,7 +58,8 @@ public class SelectIndexesFromDB {
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dateForDownload);
-            LocalDate localDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
+            LocalDate localDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1
+                    , calendar.get(Calendar.DATE));
             indexWasUpload = sqlSession.getMapper(IwuMapper.class).selectIwu(idIndex, localDate);
         }
         return new IndexStruct(priceStockInIndicesBefore, priceStockInIndicesAfter, indexWasUpload);

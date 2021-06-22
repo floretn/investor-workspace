@@ -13,4 +13,9 @@ public class Roles implements Serializable {
     private int id;
     /**rol_name*/
     private String name;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

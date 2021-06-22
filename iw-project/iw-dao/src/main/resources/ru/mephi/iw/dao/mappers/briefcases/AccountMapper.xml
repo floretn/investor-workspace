@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.AccountMapper">
+    <resultMap id="AccountMap" type="ru.mephi.iw.models.briefcases.Account">
+        <id column="acc_pk" property="id"/>
+        <result column="acc_bs_fk" property="bsId"/>
+        <result column="acc_cur_fk" property="currencyId"/>
+        <result column="acc_am" property="amount"/>
+    </resultMap>
+
+    <select id="selectAccountOfBS" resultMap="AccountMap">
+        select * from investor_workspace.t_account where acc_bs_fk = #{bsId}
+    </select>
+
+    <insert id="insertAccount" useGeneratedKeys="true" keyProperty="id" keyColumn="acc_pk">
+        insert into investor_workspace.t_account (acc_bs_fk, acc_cur_fk, acc_am)
+        values (#{account.bsId}, #{account.currencyId}, #{account.amount});
+    </insert>
+
+    <delete id="deleteAllAccountsInBS">
+        delete from investor_workspace.t_account where acc_bs_fk = #{bsId}
+    </delete>
+
+</mapper>

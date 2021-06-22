@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="update"/>
+    <composite:attribute name="dateForShow"/>
+    <composite:attribute name="action" method-signature="void method()"/>
+    <composite:attribute name="value"/>
+    <composite:attribute name="valueBtn"/>
+</composite:interface>
+
+<composite:implementation>
+        <h:form id="structIndexForDate">
+            <h:outputStylesheet name="css/TextStyle.css"/>
+                <div class="bubble1">#{cc.attrs.value}</div>
+                <p:datePicker id="dateForShow" value="#{cc.attrs.dateForShow}"  required="true"
+                              requiredMessage="Дата обязательна!" style="margin: 5px 0px 0px 0px;"/>
+                <br/>
+                <p:commandButton value="#{cc.attrs.valueBtn}" id="showStruct" action="#{cc.attrs.action}"
+                                 ajax="true" icon="fa fa-refresh" update="#{cc.attrs.update}"
+                                 style="margin: 5px 5px 5px 0px;"/>
+        </h:form>
+</composite:implementation>
+</html>

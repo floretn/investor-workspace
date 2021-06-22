@@ -15,6 +15,7 @@
         </environment>
     </environments>
     <mappers>
+        <mapper resource="ru/mephi/iw/dao/mappers/CurrencyMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/DoicMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/SiiMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/SpMapper.xml"/>
@@ -26,8 +27,15 @@
         <mapper resource="ru/mephi/iw/dao/mappers/auth/RolesMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/PFRMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/ROUMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/BriefcasesMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/BSMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/FilesMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/SIBMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/AccountMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/collections/BIFUMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/collections/UsersInfoForAdminMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/collections/CurrentUserInfoMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/PriceStockInIndexMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/SAPMapper.xml"/>
     </mappers>
 </configuration>

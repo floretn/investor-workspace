@@ -7,34 +7,43 @@
       xmlns:h="http://java.sun.com/jsf/html">
 
     <h:head>
-        <title>Download IMOEX</title>
+        <title>Загрузка IMOEX</title>
     </h:head>
 
     <h:body>
         <h:outputStylesheet name="css/InlineThreeElements.css"/>
         <h:outputStylesheet name="css/Center.css"/>
 
+        <p:growl id="msgs" showDetail="false"/>
+
         <mc:Hat/>
 
-        <br/>
-
-        <div class="parent">
+        <div class="parent" style="margin: 10px 0 10px 0;">
 
             <div class="child">
-                <div class="center">
-                    <imc:DownloadIMOEXAuto/>
+                <div class="center" style="position: relative" >
+                    <div  style="position: absolute; top: 10px">
+                        <imc:DownloadIMOEXAuto/>
+                    </div>
                 </div>
             </div>
 
             <div class="child">
-                <div class="center">
-                <imc:UploadIMOEXFile/>
+                <div class="center" style="position: relative" >
+                    <div  style="position: absolute; top: 10px">
+                        <imc:UploadIMOEXFile/>
+                    </div>
                 </div>
             </div>
 
             <div class="child">
-                <div class="center">
-                <imc:StructIndexForDate update="tableStructIMOEX:IndexTableForm:table"/>
+                <div class="center" style="position: relative" >
+                    <div  style="position: absolute; top: 10px">
+                        <mc:StructSomethingForDate update="tableStructIMOEX:IndexTableForm"
+                                                action="#{updateIMOEXBean.showIndexStruct()}"
+                                                dateForShow="#{updateIMOEXBean.dateForShow}"
+                                                value="Дата для структуры индекса" valueBtn="Показать структуру индекса"/>
+                    </div>
                 </div>
             </div>
 
@@ -42,7 +51,7 @@
 
         <mc:IndexTable id="tableStructIMOEX" list="#{updateIMOEXBean.priceStockInIndices}"
                        index="IMOEX"
-                       date="#{updateIMOEXBean.priceStockInIndices.get(0).dateOfIndexChange.dateOfChange}"/>
+                       date="#{updateIMOEXBean.dateRebalancingForCurrentStructure}"/>
 
     </h:body>
 </html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+    <h:outputStylesheet name="css/StyleForFileUploadBtn.css"/>
+    <h:form id="fileUpload"  enctype="multipart/form-data">
+
+        <div class="bubble1">Дата для загрузки структуры портфеля</div>
+
+        <p:datePicker value="#{bv.dateForUploadFile}"  required="true"
+                      requiredMessage="Дата обязательна!" style="margin: 5px 0px 0px 0px;"/>
+        <br/>
+        <div class="hide">
+            <p:outputLabel for="fu" value="Выбрать файл"/>
+        </div>
+        <p:fileUpload id="fu" value="#{bv.downloadFile}" mode="simple" skinSimple="true"
+                      style="margin: 5px 5px 5px 0px;"/>
+        <br/>
+        <p:commandButton ajax="false" action="#{bv.uploadFile()}" value="Загрузить данные"
+                         icon="fa fa-arrow-up"/>
+    </h:form>
+</composite:implementation>
+
+</html>

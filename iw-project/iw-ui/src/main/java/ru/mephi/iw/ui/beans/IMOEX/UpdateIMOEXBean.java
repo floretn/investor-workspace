@@ -10,8 +10,8 @@ import org.primefaces.model.file.UploadedFile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.dao.mappers.stocks.association.PriceStockInIndexMapper;
-import ru.mephi.iw.download.FillIndexInDB;
-import ru.mephi.iw.download.fillIMOEX.FillIMOEXInDB;
+import ru.mephi.iw.download.indexes.FillIndexInDB;
+import ru.mephi.iw.download.indexes.fillIMOEX.FillIMOEXInDB;
 import ru.mephi.iw.exceptions.IwRuntimeException;
 import ru.mephi.iw.models.stocks.associations.PriceStockInIndex;
 import javax.annotation.PostConstruct;
@@ -20,6 +20,7 @@ import javax.faces.bean.ViewScoped;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ public class UpdateIMOEXBean implements Serializable {
     private Date dateForShow;
     private Date dateForUpload;
     private Date dateForUploadFile;
+    private String dateRebalancingForCurrentStructure;
     private UploadedFile downloadFile;
     private File fileWithEr;
     transient private FillIndexInDB fillIndexInDB;
@@ -56,9 +58,16 @@ public class UpdateIMOEXBean implements Serializable {
             LOGGER.error("Ошибка инициализации взаимодействия с БД", e);
             throw e;
         }
-        dateForShow = new Date();
+        dateForShow = priceStockInIndices.get(0).getStockPrice().getSettingTime();
         dateForUpload = new Date();
         dateForUploadFile = new Date();
+        if (priceStockInIndices.size() != 0) {
+            dateRebalancingForCurrentStructure = priceStockInIndices.get(0).getDateOfIndexChange()
+                    .getDateOfChange().toString();
+        } else {
+            dateRebalancingForCurrentStructure = "";
+        }
+
         fileWithEr = null;
 
         try (ClassPathXmlApplicationContext context =
@@ -111,6 +120,12 @@ public class UpdateIMOEXBean implements Serializable {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
+        if (priceStockInIndices.size() != 0) {
+            dateRebalancingForCurrentStructure = priceStockInIndices.get(0).getDateOfIndexChange()
+                    .getDateOfChange().toString();
+        } else {
+            dateRebalancingForCurrentStructure = "";
+        }
     }
 
     public void uploadFile() {
@@ -118,6 +133,12 @@ public class UpdateIMOEXBean implements Serializable {
         boolean check;
         PrimeFaces primeFaces = PrimeFaces.current();
         PrimeFaces.Dialog dialog = primeFaces.dialog();
+
+        if (downloadFile.getFileName() == null) {
+            dialog.showMessageDynamic(new FacesMessage("Ошибка!", "Файл не был загружен на страницу!"));
+            LOGGER.error("Пользователь не загрузил файл на страницу, но хотел загрузить его в систему...");
+            return;
+        }
 
         if (!downloadFile.getFileName().endsWith(".xlsx")) {
             dialog.showMessageDynamic(new FacesMessage("Ошибка!", "Формат файла не соответствует xlsx!"));
@@ -151,7 +172,7 @@ public class UpdateIMOEXBean implements Serializable {
             LOGGER.info("Индекс был успешно загружен в систему!");
         } else {
             dialog.showMessageDynamic(new FacesMessage("Загрузка была выполнена!",
-                    "Сегодня Индекс уже был загружен в систему!"));
+                    "Индекс уже был загружен в систему На этот день!"));
             LOGGER.info("Инекс за указанную дату уже был загружен в систему...");
         }
     }

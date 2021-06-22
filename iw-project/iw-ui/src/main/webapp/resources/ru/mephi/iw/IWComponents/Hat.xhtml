@@ -14,25 +14,27 @@
         <p:menubar>
 
             <p:submenu label="Администратору">
-                <p:submenu label="Загрузка индексов">
-                    <p:menuitem value="Индекс Московской Биржи"
-                                action="#{auth.goToDownIMOEX()}"/>
+                <p:submenu label="Загрузка индексов"  icon="fa fa-download">
+                    <p:menuitem value="IMOEX"
+                                action="#{hat.goToDownIMOEX()}"/>
                 </p:submenu>
                 <p:menuitem value="Пользователи" icon="fa fa-users"
-                            action="#{auth.goToUsersView()}"/>
+                            action="#{hat.goToUsersView()}"/>
             </p:submenu>
 
             <p:submenu label="Инвестору">
+                <p:menuitem value="Мои портфели" icon="fa fa-briefcase"
+                            action="#{hat.goToUserBriefcases()}"/>
             </p:submenu>
 
-            <p:submenu label="#{auth.username}" icon="fa fa-home" style="float:right">
-                <p:menuitem value="Профиль" action="#{auth.goToProfile()}" icon="fa fa-user"/>
+            <p:submenu label="#{hat.username}" icon="fa fa-home" style="float:right">
+                <p:menuitem value="Профиль" action="#{hat.goToProfile()}" icon="fa fa-user"/>
                 <p:submenu label="Настройки" icon="fa fa-wrench">
-                    <p:menuitem value="Настройки безопасности"
-                                action="#{auth.goToSafetySettings()}"/>
+                    <p:menuitem value="Безопасность" icon="fa fa-user-secret"
+                                action="#{hat.goToSafetySettings()}"/>
                 </p:submenu>
-                <p:menuitem value="#{auth.status}" icon="#{auth.icon}"
-                            action="#{auth.loginLogout()}" update="hat"/>
+                <p:menuitem value="#{hat.status}" icon="#{hat.icon}"
+                            action="#{hat.loginLogout()}" update="hat"/>
             </p:submenu>
 
         </p:menubar>

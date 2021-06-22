@@ -2,18 +2,48 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
-      xmlns:mcp = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/profile"
       xmlns:h="http://java.sun.com/jsf/html">
 
     <h:head>
         <title>Личный кабинет</title>
     </h:head>
 
-    <h:body>
-        <p:growl id="growl" showDetail="true" />
+    <h:body id="bodyBag">
         <mc:Hat id="hat"/>
-        <mcp:ProfileComponent update="hat"/>
+        <h:outputStylesheet name="css/Center.css"/>
+
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true"/>
+            <div class="center">
+                <p:panel>
+
+                    <h2>Личные данные</h2>
+
+                    <div class="bubble" style="margin: 0 0 5px 0;" >Ваши роли: #{profile.currentUserInfo.rolesOfUser}</div>
+
+                    <br/>
+
+                    <mc:UserInfo ln="#{profile.currentUserInfo.user.lastName}" fn="#{profile.currentUserInfo.user.firstName}"
+                                 ptr="#{profile.currentUserInfo.user.patronymic}" phn="#{profile.currentUserInfo.user.phone}"
+                                 email="#{profile.currentUserInfo.user.email}" un="#{profile.currentUserInfo.user.username}"/>
+
+                    <p:commandButton onclick="PF('updateDlg').show();" value="Изменить"
+                                     icon="fa fa-pencil"
+                                     style="margin: 5px 5px 5px 0px;"/>
+                    <p:commandButton onclick="PF('deleteDlg').show();" value="Удалить аккаунт"
+                                     icon="fa fa-trash"
+                                     style="margin: 5px 5px 5px 0px;"/>
+                </p:panel>
+            </div>
+
+            <p:dialog header="Удаление аккаунта" widgetVar="deleteDlg" height="100">
+                <mc:CheckPwd action="#{profile.deleteUser()}" update="form" pwd="#{profile.pwdOld}"/>
+            </p:dialog>
+
+            <p:dialog header="Изменение данных" widgetVar="updateDlg" height="100">
+                <mc:CheckPwd action="#{profile.updateUser()}" update="form" pwd="#{profile.pwdOldU}"/>
+            </p:dialog>
+        </h:form>
     </h:body>
 </html>

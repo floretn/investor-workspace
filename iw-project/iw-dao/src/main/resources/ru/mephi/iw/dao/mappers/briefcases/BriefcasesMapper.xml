@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.BriefcasesMapper">
+    <resultMap id="BriefcasesMap" type="ru.mephi.iw.models.briefcases.Briefcases">
+        <id column="brf_pk" property="id"/>
+        <result column="brf_usr_fk" property="userId"/>
+        <result column="brf_name" property="name"/>
+        <result column="brf_desc" property="description"/>
+    </resultMap>
+
+    <select id="selectBriefcase" resultMap="BriefcasesMap">
+        select * from investor_workspace.t_briefcases where brf_pk = #{id}
+    </select>
+
+    <select id="selectBriefcasesOfUser" resultMap="BriefcasesMap">
+        select * from investor_workspace.t_briefcases where brf_usr_fk = #{userId}
+    </select>
+
+    <insert id="insertBriefcase" useGeneratedKeys="true" keyProperty="id" keyColumn="brf_pk">
+        insert into investor_workspace.t_briefcases (brf_usr_fk, brf_name, brf_desc)
+        values (#{briefcase.userId}, #{briefcase.name}, #{briefcase.description});
+    </insert>
+
+    <update id="updateBriefcase">
+        update investor_workspace.t_briefcases
+        set brf_name = #{briefcase.name}, brf_desc = #{briefcase.description}
+        where brf_pk = #{id};
+    </update>
+
+    <delete id="deleteBriefcases">
+        delete from investor_workspace.t_briefcases where brf_pk = #{id}
+    </delete>
+
+</mapper>

@@ -7,8 +7,8 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="ru.mephi.iw.download.fillIMOEX"/>
-    <context:component-scan base-package="ru.mephi.iw.download"/>
+    <context:component-scan base-package="ru.mephi.iw.download.indexes.fillIMOEX"/>
+    <context:component-scan base-package="ru.mephi.iw.download.indexes"/>
     <context:component-scan base-package="ru.mephi.iw.dao.work"/>
 
 </beans>

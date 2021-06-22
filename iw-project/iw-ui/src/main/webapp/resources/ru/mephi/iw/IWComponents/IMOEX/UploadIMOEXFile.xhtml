@@ -11,12 +11,10 @@
         <h:outputStylesheet name="css/StyleForFileUploadBtn.css"/>
         <h:form id="fileUpload"  enctype="multipart/form-data">
 
-                <p:growl id="messages" showDetail="false"/>
+                <div class="bubble1">Дата для загрузки индекса из файла</div>
 
-                <p:outputLabel value="Дата для загрузки индекса из файла"/>
-                <br/>
-                <p:datePicker id="dateForShow" value="#{updateIMOEXBean.dateForUploadFile}"  required="true"
-                              requiredMessage="Дата обязательна!"/>
+                <p:datePicker id="dateForUpload" value="#{updateIMOEXBean.dateForUploadFile}"  required="true"
+                              requiredMessage="Дата обязательна!" style="margin: 5px 0px 0px 0px;"/>
                 <br/>
                 <div class="hide">
                         <p:outputLabel for="fu" value="Выбрать файл"/>

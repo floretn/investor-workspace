@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.mephi.iw.models.auth.*;
-
-import java.util.List;
 import java.util.Set;
 
 /**Вся информация о пользователе*/

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:mcb = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/briefcases"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Просмотр портфеля</title>
+</h:head>
+
+<h:body id="bodyBag">
+
+    <mc:Hat/>
+    <p:growl id="growl" showDetail="true" />
+
+    <h:outputStylesheet name="css/InlineThreeElements.css"/>
+    <h:outputStylesheet name="css/Center.css"/>
+    <h:outputStylesheet name="css/TextStyle.css"/>
+
+    <div class="parent" style="margin: 10px 0 10px 0;">
+
+        <div class="child">
+            <div class="center" style="position: relative" >
+                <div  style="position: absolute; top: 10px">
+                    <mcb:BVInfoComponent/>
+                </div>
+            </div>
+        </div>
+
+        <div class="child">
+            <div class="center" style="position: relative">
+                <div  style="position: absolute; top: 10px">
+                    <mcb:BVUpdateComponent/>
+                </div>
+            </div>
+        </div>
+
+        <div class="child" style="position: relative">
+            <div class="center">
+                <div style="position: absolute; top: 10px;">
+                    <mc:StructSomethingForDate update="table"
+                                               action="#{bv.showBriefcaseStruct()}"
+                                               dateForShow="#{bv.dateForShow}" value="Структура портфеля за дату"
+                                               valueBtn="Показать структуру портфеля"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="bubble">Ваши счета в портфеле: #{bv.accounts}</div>
+
+    <p:dataTable id="table" var="stock" value="#{bv.stocks}">
+        <p:column headerText="Тикер акции">
+            <h:outputText value="#{stock.stockAndPrice.stock.ticker}"/>
+        </p:column>
+        <p:column headerText="Тип купленной акции">
+            <h:outputText value="#{stock.stocksInBriefcase.type}"/>
+        </p:column>
+        <p:column headerText="Количество акций в портфеле">
+            <h:outputText value="#{stock.stocksInBriefcase.stocksNumber}"/>
+        </p:column>
+        <p:column headerText="Цена акции">
+            <h:outputText value="#{stock.stockAndPrice.stockPrice.price} #{stock.stockAndPrice.currencyOfPrice.name}"/>
+        </p:column>
+        <p:column headerText="Время выставления цены">
+            <h:outputText value="#{stock.stockAndPrice.stockPrice.settingTime}"/>
+        </p:column>
+    </p:dataTable>
+
+</h:body>
+</html>

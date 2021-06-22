@@ -10,10 +10,10 @@
 
 <composite:implementation>
     <h:form id="downloadAutoForm">
-        <p:outputLabel value="Дата для загрузки индекса"/>
-        <br/>
+        <div class="bubble1">Дата для загрузки индекса</div>
+
         <p:datePicker id="dateForShow" value="#{updateIMOEXBean.dateForUpload}"  required="true"
-                      requiredMessage="Дата обязательна!"/>
+                      requiredMessage="Дата обязательна!" style="margin: 5px 0px 0px 0px;"/>
         <br/>
         <p:outputLabel for="trust_the_price" value="Доверять считываемой цене и капитализации?"/>
         <p:selectOneRadio id="trust_the_price" value="#{updateIMOEXBean.trustInfo}">
@@ -32,8 +32,6 @@
         <p:commandButton ajax="false" style="visibility: hidden;" widgetVar="downloadFile">
             <p:fileDownload value="#{updateIMOEXBean.createFile()}" contentDisposition="attachment"/>
         </p:commandButton>
-
-        <p:growl id="msgs" showDetail="false"/>
 
     </h:form>
 </composite:implementation>

@@ -17,4 +17,6 @@ public class RolesOfUsers implements Serializable {
     private int roleId;
     /**rou_status*/
     private boolean status;
+
+
 }

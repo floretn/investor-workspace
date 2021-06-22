@@ -20,7 +20,7 @@
         from
             (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
              where doic_indx_fk = #{indexId}
-             order by doic_date_chng
+             order by doic_date_chng desc
              limit 1) sd
         left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
         left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
@@ -29,7 +29,7 @@
                                 from
                                     (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
                                      where doic_indx_fk = #{indexId}
-                                     order by doic_date_chng
+                                     order by doic_date_chng desc
                                      limit 1) sd
                                 left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
                                 left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
@@ -55,8 +55,8 @@
         select *
         from
            (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
-           where doic_indx_fk = #{indexId}
-           order by doic_date_chng 
+           where doic_indx_fk = #{indexId} and doic_date_chng <![CDATA[<]]> #{before}
+           order by doic_date_chng desc
            limit 1) sd
         left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk) 
         left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk) 
@@ -64,13 +64,13 @@
         where sp.sp_time_set = (select sp_time_set
                                    from
                                        (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
-                                       where doic_indx_fk = #{indexId}
-                                       order by doic_date_chng 
+                                       where doic_indx_fk = #{indexId} and doic_date_chng <![CDATA[<]]> #{before}
+                                       order by doic_date_chng desc
                                        limit 1) sd
                                    left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk) 
                                    left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk) 
                                    left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk) 
-                                   where sp.sp_time_set <![CDATA[<]]> #{before}
+                                   where sp.sp_time_set <![CDATA[<]]> #{before} and doic_date_chng <![CDATA[<]]> #{before}
                                    order by sp.sp_time_set desc
                                    limit 1)
     </select>
@@ -79,7 +79,7 @@
         select *
         from
              (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
-                where doic_indx_fk = #{indexId}
+                where doic_indx_fk = #{indexId} and doic_date_chng > #{from}
                 order by doic_date_chng
                 limit 1) sd
         left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
@@ -88,14 +88,14 @@
         where sp.sp_time_set = (select sp_time_set
                                     from
                                        (select doic_pk, doic_indx_fk, doic_date_chng from investor_workspace.t_date_of_indexes_changes
-                                           where doic_indx_fk = #{indexId}
+                                           where doic_indx_fk = #{indexId} and doic_date_chng > #{from}
                                            order by doic_date_chng
                                         limit 1) sd
                                     left join investor_workspace.t_stocks_in_indexes sii on (sii.sii_doic_fk = sd.doic_pk)
                                     left join investor_workspace.t_stocks stck on (stck.stck_pk = sii.sii_stck_fk)
                                     left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = stck.stck_pk)
                                     where sp.sp_time_set > #{from}
-                                    order by sp.sp_time_set desc
+                                    order by sp.sp_time_set
                                     limit 1)
     </select>
 

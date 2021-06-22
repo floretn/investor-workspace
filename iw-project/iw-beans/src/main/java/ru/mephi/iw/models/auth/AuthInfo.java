@@ -36,4 +36,9 @@ public class AuthInfo implements Serializable {
     public int hashCode() {
         return Objects.hash(getLogin(), getPwd());
     }
+
+    @Override
+    public String toString() {
+        return login;
+    }
 }

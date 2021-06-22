@@ -17,10 +17,12 @@
     <p:growl id="growl" showDetail="true" />
 
     <h:outputStylesheet name="css/Center.css"/>
+    <h:outputStylesheet name="css/TextStyle.css"/>
     <div class="center">
         <p:panel>
             <h:form id="formUpdateRoles">
-
+                <div class="bubble"><u>#{userInfoChange.user.user.lastName} #{userInfoChange.user.user.firstName}
+                    #{userInfoChange.user.user.patronymic}</u></div>
                 <h:outputStylesheet name="css/TextStyle.css"/>
 
                 <p:growl id="growl" showDetail="true" />
@@ -50,7 +52,7 @@
                 <div class="p-field p-col-12 p-md-4">
                     <p:selectOneMenu id="login" value="#{userInfoChange.login}">
                         <f:selectItem itemLabel="Выбрать" itemValue=""/>
-                        <f:selectItems value="#{userInfoChange.logins}"/>
+                        <f:selectItems value="#{userInfoChange.user.authInfo}"/>
                     </p:selectOneMenu>
                 </div>
 

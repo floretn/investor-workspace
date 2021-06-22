@@ -2,14 +2,13 @@ package ru.mephi.iw.ui.beans.views;
 
 import lombok.Data;
 import org.apache.ibatis.session.SqlSession;
-import ru.mephi.iw.constants.RolesKeys;
 import ru.mephi.iw.dao.initialization.Initial;
-import ru.mephi.iw.dao.mappers.auth.collections.UsersInfoForAdminMapper;
+import ru.mephi.iw.dao.mappers.auth.collections.CurrentUserInfoMapper;
 import ru.mephi.iw.dao.work.WorkWithCurrentUserInfo;
-import ru.mephi.iw.models.auth.RolesOfUsers;
-import ru.mephi.iw.models.auth.collections.UsersInfoForAdmin;
+import ru.mephi.iw.models.auth.Roles;
+import ru.mephi.iw.models.auth.collections.CurrentUserInfo;
 import ru.mephi.iw.security.PwdCoder;
-import ru.mephi.iw.ui.beans.auth_pages.Auth;
+import ru.mephi.iw.ui.beans.hat.Hat;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
@@ -23,8 +22,8 @@ import java.util.stream.Collectors;
 @Data
 public class UsersView implements Serializable {
 
-    private List<UsersInfoForAdmin> usersInfo;
-    private List<UsersInfoForAdmin> usersInfoInDB;
+    private Set<CurrentUserInfo> usersInfo;
+    private Set<CurrentUserInfo> usersInfoInDB;
 
     private String username = "";
     private String lastName = "";
@@ -32,13 +31,9 @@ public class UsersView implements Serializable {
     private String patronymic = "";
     private String phone = "";
     private String email = "";
-    private int role = -1;
+    private String role = "";
 
-    private final int indexAdmin = RolesKeys.ADMIN_KEY;
-    private final int indexUser = RolesKeys.USER_KEY;
-
-    private UsersInfoForAdmin selectedUserForUpdate = null;
-    private UsersInfoForAdmin selectedUserForDelete;
+    private CurrentUserInfo selectedUserForDelete;
 
     private String pwd;
     private String pwd1;
@@ -46,49 +41,53 @@ public class UsersView implements Serializable {
 
     private PwdCoder pwdCoder = new PwdCoder();
 
-    @ManagedProperty(value = "#{auth}")
-    private Auth auth;
+    @ManagedProperty(value = "#{hat}")
+    private Hat hat;
 
     @PostConstruct
     private void init() {
         updateData();
     }
 
-    public String prepareForUpdate(UsersInfoForAdmin currentUserInfo) {
-        selectedUserForUpdate = currentUserInfo;
-        return "/ru/mephi/iw/views/UserInfoChange.xhtml?faces-redirect=true";
+    public String prepareForUpdate(CurrentUserInfo currentUserInfo) {
+        return "/ru/mephi/iw/views/UserInfoChange.xhtml?id=" + currentUserInfo.getId() + "faces-redirect=true";
     }
 
     public void updateData() {
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
-            usersInfoInDB = sqlSession.getMapper(UsersInfoForAdminMapper.class).selectUserInfo();
+            usersInfoInDB = sqlSession.getMapper(CurrentUserInfoMapper.class).selectAllCurrentUserInfo();
             usersInfo = usersInfoInDB;
         }
     }
 
-    public void prepareForDelete(UsersInfoForAdmin currentUserInfo) {
+    public void prepareForDelete(CurrentUserInfo currentUserInfo) {
         selectedUserForDelete = currentUserInfo;
     }
 
     public void updateUserList() {
-        usersInfo = usersInfoInDB.stream().filter(u -> username.equals("") || u.getUser().getUsername().equals(username))
-                .filter(u -> lastName.equals("") || u.getUser().getLastName().equals(lastName))
-                .filter(u -> firstName.equals("") || u.getUser().getFirstName().equals(firstName))
-                .filter(u -> patronymic.equals("") || u.getUser().getPatronymic().equals(patronymic))
+        usersInfo = usersInfoInDB.parallelStream().filter(u -> username.equals("") || u.getUser().getUsername().toLowerCase(Locale.ROOT)
+                .contains(username.toLowerCase(Locale.ROOT)))
+                .filter(u -> lastName.equals("") || u.getUser().getLastName().toLowerCase(Locale.ROOT)
+                        .contains(lastName.toLowerCase(Locale.ROOT)))
+                .filter(u -> firstName.equals("") || u.getUser().getFirstName().toLowerCase(Locale.ROOT)
+                        .contains(firstName.toLowerCase(Locale.ROOT)))
+                .filter(u -> patronymic.equals("") || u.getUser().getPatronymic().toLowerCase(Locale.ROOT)
+                        .contains(patronymic.toLowerCase(Locale.ROOT)))
                 .filter(u -> phone.equals("") || u.getUser().getPhone().equals(phone))
                 .filter(u -> email.equals("") || u.getUser().getEmail().equals(email))
-                .filter(u -> role == -1 || checkRole(u.getRolesOfUser(), role) ||
-                        (role == 0 && u.getRolesOfUser().isEmpty()))
-                .collect(Collectors.toList());
+                .filter(u -> role.equals("") || (role.equals("Без роли") && u.getRolesOfUser().isEmpty())
+                        || checkRole(u.getRolesOfUser()))
+                .collect(Collectors.toSet());
+
         if (usersInfo.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_WARN,
                     "Предупреждение!", "Совпадений не найдено!");
         }
     }
 
-    private boolean checkRole(Set<RolesOfUsers> rolesOfUsers, int roleId) {
-        for (RolesOfUsers roleOfUser : rolesOfUsers) {
-            if (roleOfUser.getRoleId() == roleId && roleOfUser.isStatus()) {
+    private boolean checkRole(Set<Roles> rolesOfUsers) {
+        for (Roles roleOfUser : rolesOfUsers) {
+            if (roleOfUser.getName().equals(role)) {
                 return true;
             }
         }
@@ -124,7 +123,7 @@ public class UsersView implements Serializable {
 
     private boolean checkInfo() {
 
-        if (!pwdCoder.encodePwd(pwdOld).equals(auth.getCurrentUserInfo().getAuthInfo().getPwd())) {
+        if (!pwdCoder.encodePwd(pwdOld).equals(hat.getCurrentUserInfo().getAuthInfo().getPwd())) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Неверный пароль!");
             return true;

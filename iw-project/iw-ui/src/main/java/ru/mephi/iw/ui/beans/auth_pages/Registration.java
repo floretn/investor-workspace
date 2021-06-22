@@ -10,16 +10,18 @@ import ru.mephi.iw.models.auth.AuthInfo;
 import ru.mephi.iw.models.auth.User;
 import ru.mephi.iw.models.auth.collections.CurrentUserInfo;
 import ru.mephi.iw.security.PwdCoder;
+import ru.mephi.iw.ui.beans.hat.Hat;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 
 @ManagedBean(name="registration")
-@SessionScoped
+@ViewScoped
 @Data
 public class Registration implements Serializable {
 
@@ -29,8 +31,8 @@ public class Registration implements Serializable {
     private String pwd1New = "";
     private PwdCoder pwdCoder = new PwdCoder();
 
-    @ManagedProperty(value = "#{auth}")
-    private Auth auth;
+    @ManagedProperty(value = "#{hat}")
+    private Hat hat;
 
     public String insertUser() {
 
@@ -42,12 +44,10 @@ public class Registration implements Serializable {
 
         authInfoNew.setPwd(password);
         CurrentUserInfo currentUserInfo = new WorkWithCurrentUserInfo().insertUser(userNew, authInfoNew);
-        auth.setUserInfo(currentUserInfo);
+        hat.setCurrentUserInfo(currentUserInfo);
 
-        pwdNew = "";
-        pwd1New = "";
-        userNew = new User(0, "", "", "", "", "", "");
-        authInfoNew = new AuthInfo(0, 0, "", "");
+        ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession()
+                .setAttribute("user", currentUserInfo);
 
         return "Profile?faces-redirect=true";
     }
@@ -61,7 +61,9 @@ public class Registration implements Serializable {
 
         boolean check = true;
 
-        if (auth.getCurrentUserInfo() != null) {
+
+        if (((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+                .getRequest()).getSession().getAttribute("user") != null) {
             addMessage(FacesMessage.SEVERITY_WARN, "Предупреждение!", "Сначала нужно выйти из аккаунта!");
             check = false;
         }

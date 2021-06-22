@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:mcb = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/briefcases"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Новый портфель</title>
+</h:head>
+
+<h:body id="bodyBag">
+
+    <mc:Hat/>
+    <p:growl id="growl" showDetail="true" />
+
+    <h:outputStylesheet name="css/Center.css"/>
+    <h:outputStylesheet name="css/TextStyle.css"/>
+    <div class="center">
+        <p:panel>
+            <mcb:AddBriefcaseComponent/>
+        </p:panel>
+    </div>
+
+</h:body>
+</html>

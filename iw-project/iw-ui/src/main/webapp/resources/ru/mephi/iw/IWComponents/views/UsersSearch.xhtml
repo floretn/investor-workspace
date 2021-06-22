@@ -13,71 +13,77 @@
 
 <composite:implementation>
 
-        <h:outputStylesheet name="css/TextStyle.css"/>
+    <h:outputStylesheet name="css/TextStyle.css"/>
+    <h:outputStylesheet name="css/OneOnTheOther.css"/>
 
-        <p:growl id="growl" showDetail="true" />
+    <p:growl id="growl" showDetail="true" />
 
-        <p:panel>
+    <br/>
+
+    <div class="other">
+
+        <div class="one">
+
             <p:commandButton id="search" value="Критерии поиска" icon="fa fa-search"
                              style="margin: 0px 5px 5px 0px;"/>
             <p:commandButton id="refresh" value="Обновить" icon="fa fa-refresh" action="#{usersView.updateData()}"/>
-        </p:panel>
-        <br/>
 
-        <p:overlayPanel for="search" style="width:350px">
 
-            <br/>
-            <span class="ui-float-label">
-                <p:inputText value="#{usersView.username}"/>
-                <p:outputLabel for="@previous" value="Псевдоним"/>
-            </span>
+            <p:overlayPanel for="search" style="width:350px">
 
-            <br/>
-            <span class="ui-float-label">
-                <p:inputText value="#{usersView.lastName}"/>
-                <p:outputLabel for="@previous" value="Фамилия"/>
-            </span>
-
-            <br/>
-            <span class="ui-float-label">
-                <p:inputText value="#{usersView.firstName}"/>
-                <p:outputLabel for="@previous" value="Имя"/>
-            </span>
-
-            <br/>
-            <span class="ui-float-label">
-                <p:inputText value="#{usersView.patronymic}"/>
-                <p:outputLabel for="@previous" value="Отчество"/>
-            </span>
-
-            <br/>
-            <span class="ui-float-label">
-                <p:inputText value="#{usersView.phone}"/>
-                <p:outputLabel for="@previous" value="+7XXXXXXXXXX"/>
-            </span>
-
-            <br/>
-            <span class="ui-float-label">
-                <p:inputText value="#{usersView.email}"/>
-                <p:outputLabel for="@previous" value="email"/>
-            </span>
-
-            <div class="p-field p-col-12 p-md-4">
                 <br/>
-                <p:selectOneMenu id="option" value="#{usersView.role}">
-                    <f:selectItem itemLabel="Роли" itemValue="#{-1}"/>
-                    <f:selectItem itemLabel="Инвестор" itemValue="#{usersView.indexUser}"/>
-                    <f:selectItem itemLabel="Администратор" itemValue="#{usersView.indexAdmin}"/>
-                    <f:selectItem itemLabel="Без роли" itemValue="#{0}"/>
-                </p:selectOneMenu>
-            </div>
+                <span class="ui-float-label">
+                    <p:inputText value="#{usersView.username}"/>
+                    <p:outputLabel for="@previous" value="Псевдоним"/>
+                </span>
 
-            <br/>
-            <p:commandButton icon="fa fa-search" action="#{usersView.updateUserList}"
-                             update="#{cc.attrs.update}"
-                             style="margin: 0px 5px 5px 0px;"/>
-            <p:commandButton icon="fa fa-trash" action="#{usersView.trash}" update="#{cc.attrs.update}"/>
-        </p:overlayPanel>
+                <br/>
+                <span class="ui-float-label">
+                    <p:inputText value="#{usersView.lastName}"/>
+                    <p:outputLabel for="@previous" value="Фамилия"/>
+                </span>
+
+                <br/>
+                <span class="ui-float-label">
+                    <p:inputText value="#{usersView.firstName}"/>
+                    <p:outputLabel for="@previous" value="Имя"/>
+                </span>
+
+                <br/>
+                <span class="ui-float-label">
+                    <p:inputText value="#{usersView.patronymic}"/>
+                    <p:outputLabel for="@previous" value="Отчество"/>
+                </span>
+
+                <br/>
+                <span class="ui-float-label">
+                    <p:inputText value="#{usersView.phone}"/>
+                    <p:outputLabel for="@previous" value="+7XXXXXXXXXX"/>
+                </span>
+
+                <br/>
+                <span class="ui-float-label">
+                    <p:inputText value="#{usersView.email}"/>
+                    <p:outputLabel for="@previous" value="email"/>
+                </span>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <br/>
+                    <p:selectOneMenu id="option" value="#{usersView.role}">
+                        <f:selectItem itemLabel="Роли" itemValue=""/>
+                        <f:selectItem itemLabel="Инвестор" itemValue="Инвестор"/>
+                        <f:selectItem itemLabel="Администратор" itemValue="Администратор"/>
+                        <f:selectItem itemLabel="Без роли" itemValue="Без роли"/>
+                    </p:selectOneMenu>
+                </div>
+
+                <br/>
+                <p:commandButton icon="fa fa-search" action="#{usersView.updateUserList}"
+                                 update="#{cc.attrs.update}"
+                                 style="margin: 0px 5px 5px 0px;"/>
+                <p:commandButton icon="fa fa-trash" action="#{usersView.trash}" update="#{cc.attrs.update}"/>
+            </p:overlayPanel>
+        </div>
 
         <p:dataView id="dw" var="currentUserInfo" value="#{usersView.usersInfo}" rows="12" paginator="true"
                     rowsPerPageTemplate="6,12,21"
@@ -93,6 +99,8 @@
                         #{currentUserInfo.user.phone}
                         <br/>
                         #{currentUserInfo.user.email}
+                        <br/>
+                        Роли: #{currentUserInfo.rolesOfUser}
                         <br/>
                         <p:commandButton icon="fa fa-pencil"
                                          style="margin: 0px 5px 5px 0px;"/>
@@ -114,6 +122,8 @@
                         <br/>
                         #{currentUserInfo.user.email}
                         <br/>
+                        Роли: #{currentUserInfo.rolesOfUser}
+                        <br/>
                         <p:commandButton action="#{usersView.prepareForUpdate(currentUserInfo)}" icon="fa fa-pencil"
                                          style="margin: 0px 5px 5px 0px;"/>
                         <p:commandButton icon="fa fa-trash" action="#{usersView.prepareForDelete(currentUserInfo)}"
@@ -124,6 +134,7 @@
             </p:dataViewListItem>
 
         </p:dataView>
+    </div>
 
 </composite:implementation>
 </html>

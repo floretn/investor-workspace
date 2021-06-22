@@ -20,8 +20,9 @@
                 <p:password id="float-upsert_pwdOldPwdDlg" value="#{cc.attrs.pwd}"/>
             </span>
         </div>
-        <div class="center" >
-            <p:commandButton value="Принять изменения" ajax="true" update="#{cc.attrs.update}" onclick="#{cc.attrs.onclick}"
+        <div class="center" id="center">
+            <p:commandButton id="btn" value="Принять изменения" ajax="true" update="#{cc.attrs.update}"
+                             onclick="#{cc.attrs.onclick}"
                              icon="fa fa-check" action="#{cc.attrs.action}"
                              style="margin: 5px 5px 5px 5px;"/>
             <p:commandButton value="Отмена" ajax="true" onclick="#{cc.attrs.onclick}"

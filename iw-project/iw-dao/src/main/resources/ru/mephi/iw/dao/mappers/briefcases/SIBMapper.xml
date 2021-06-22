@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.SIBMapper">
+    <resultMap id="SIBMap" type="ru.mephi.iw.models.briefcases.StocksInBriefcases">
+        <id column="sib_pk" property="id"/>
+        <result column="sib_bs_fk" property="briefcaseStateId"/>
+        <result column="sib_stck_fk" property="stockId"/>
+        <result column="sib_stck_num" property="stocksNumber"/>
+        <result column="sib_type" property="type"/>
+    </resultMap>
+
+    <select id="selectAllSIBInBS" resultMap="SIBMap">
+        select * from investor_workspace.t_stocks_in_briefcases where sib_bs_fk = #{bsId}
+    </select>
+
+    <insert id="insertSIB" useGeneratedKeys="true" keyProperty="id" keyColumn="sib_pk">
+        insert into investor_workspace.t_stocks_in_briefcases (sib_bs_fk, sib_stck_fk, sib_stck_num, sib_type)
+        values (#{sib.briefcaseStateId}, #{sib.stockId}, #{sib.stocksNumber}, #{sib.type});
+    </insert>
+
+    <delete id="deleteAllSIBInBS">
+        delete from investor_workspace.t_stocks_in_briefcases where sib_bs_fk = #{bsId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="ln"/>
+    <composite:attribute name="fn"/>
+    <composite:attribute name="ptr"/>
+    <composite:attribute name="phn"/>
+    <composite:attribute name="email"/>
+    <composite:attribute name="un"/>
+</composite:interface>
+
+<composite:implementation>
+
+    <span class="ui-float-label" style="margin: 0 0 5px 0;">
+        <p:inputText id="float-upsert_lastName" value="#{cc.attrs.ln}" required="true"
+                     requiredMessage="Фамилия обязательна!" style="min-width: 230px"/>
+        <p:outputLabel for="@previous" value="Фамилия"/>
+    </span>
+
+    <br/>
+
+    <span class="ui-float-label" style="margin: 0 0 5px 0;">
+        <p:inputText id="float-upsert_firstName" value="#{cc.attrs.fn}" required="true"
+                     requiredMessage="Имя обязательно!" style="min-width: 230px"/>
+        <p:outputLabel for="@previous" value="Имя"/>
+    </span>
+
+    <br/>
+
+    <span class="ui-float-label" style="margin: 0 0 5px 0;">
+        <p:inputText id="float-upsert_patronymic" value="#{cc.attrs.ptr}" style="min-width: 230px"/>
+        <p:outputLabel for="@previous" value="Отчество" style="min-width: 230px"/>
+    </span>
+
+    <br/>
+
+    <span class="ui-float-label" style="margin: 0 0 5px 0;">
+        <p:inputText id="float-upsert_phone" value="#{cc.attrs.phn}" required="true"
+                     requiredMessage="Указать телефон обязательно!" style="min-width: 230px"/>
+        <p:outputLabel for="@previous" value="Телефон: +7XXXXXXXXXX"/>
+    </span>
+
+    <br/>
+
+    <div class="its">
+        <span class="ui-float-label">
+            <p:inputText id="float-upsert_email" value="#{cc.attrs.email}" required="true"
+                         requiredMessage="Указать email обязательно!" style="min-width: 230px"/>
+            <p:outputLabel for="@previous" value="Email"/>
+        </span>
+    </div>
+
+    <br/>
+
+    <span class="ui-float-label" style="margin: 0 0 5px 0;">
+        <p:inputText id="float-upsert_userName" value="#{cc.attrs.un}" required="true"
+                     requiredMessage="Имя пользователя обязательно!" style="min-width: 230px"/>
+        <p:outputLabel for="@previous" value="Псевдоним"/>
+    </span>
+
+</composite:implementation>
+</html>

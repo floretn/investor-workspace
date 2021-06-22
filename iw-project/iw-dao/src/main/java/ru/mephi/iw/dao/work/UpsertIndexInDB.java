@@ -4,6 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.dao.mappers.stocks.*;
+import ru.mephi.iw.exceptions.IwRuntimeException;
 import ru.mephi.iw.models.stocks.DateOfIndexesChanges;
 import ru.mephi.iw.models.stocks.IndexWasUpload;
 import ru.mephi.iw.models.stocks.Stock;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UpsertIndexInDB {
 
     public void insertOnlyPrice(List<PriceStockInIndex> priceStockInIndices, DateOfIndexesChanges doicChange, int indexId) {
+        IwRuntimeException exception = null;
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
             try {
                 for (PriceStockInIndex priceStockInIndex : priceStockInIndices) {
@@ -35,8 +37,12 @@ public class UpsertIndexInDB {
                 } catch (Exception ex1) {
                     ex.addSuppressed(ex1);
                 }
-                throw ex;
+                exception = new IwRuntimeException("Внутренняя ошибка!", ex);
             }
+        }
+
+        if (exception != null) {
+            throw exception;
         }
 
     }
@@ -84,7 +90,8 @@ public class UpsertIndexInDB {
     private void insertIwu(List<PriceStockInIndex> priceStockInIndices, SqlSession sqlSession, int indexId) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(priceStockInIndices.get(0).getStockPrice().getSettingTime().getTime()));
-        LocalDate localDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        LocalDate localDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1
+                , calendar.get(Calendar.DATE));
         sqlSession.getMapper(IwuMapper.class).insertIwu(new IndexWasUpload(0, indexId, localDate, true));
     }
 }

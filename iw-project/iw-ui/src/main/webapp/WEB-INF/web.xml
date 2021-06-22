@@ -44,6 +44,7 @@
     <url-pattern>/ru/mephi/iw/settings/SafetySettings.xhtml</url-pattern>
     <url-pattern>/ru/mephi/iw/views/UsersView.xhtml</url-pattern>
     <url-pattern>/ru/mephi/iw/views/UserInfoChange.xhtml</url-pattern>
+    <url-pattern>/ru/mephi/iw/briefcases/UserBriefcases.xhtml</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -55,15 +56,9 @@
     <url-pattern>/ru/mephi/iw/IMOEX/DownloadIMOEX.xhtml</url-pattern>
     <url-pattern>/ru/mephi/iw/views/UsersView.xhtml</url-pattern>
     <url-pattern>/ru/mephi/iw/views/UserInfoChange.xhtml</url-pattern>
+    <url-pattern>/ru/mephi/iw/briefcases/UserBriefcases.xhtml</url-pattern>
+    <url-pattern>/ru/mephi/iw/briefcases/BriefcaseView.xhtml</url-pattern>
   </filter-mapping>
 
-  <filter>
-    <filter-name>UICFilter</filter-name>
-    <filter-class>ru.mephi.iw.ui.filters.UICFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>UICFilter</filter-name>
-    <url-pattern>/ru/mephi/iw/views/UserInfoChange.xhtml</url-pattern>
-  </filter-mapping>
 </web-app>
 

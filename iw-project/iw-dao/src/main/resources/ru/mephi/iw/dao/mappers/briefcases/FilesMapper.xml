@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.FilesMapper">
+    <resultMap id="FilesMap" type="ru.mephi.iw.models.briefcases.Files">
+        <id column="fl_pk" property="id"/>
+        <result column="fl_name" property="name"/>
+        <result column="fl_date_dwn" property="dateDownload"/>
+        <result column="fl_content" property="content"/>
+    </resultMap>
+
+    <select id="selectFile" resultMap="FilesMap">
+        select * from investor_workspace.t_files where fl_pk = #{id}
+    </select>
+
+    <insert id="insertFile" useGeneratedKeys="true" keyProperty="id" keyColumn="fl_pk">
+        insert into investor_workspace.t_files (fl_name, fl_date_dwn, fl_content)
+        values (#{file.name}, #{file.dateDownload}, #{file.content});
+    </insert>
+
+    <delete id="deleteFile">
+        delete from investor_workspace.t_files where fl_pk = #{id}
+    </delete>
+
+</mapper>

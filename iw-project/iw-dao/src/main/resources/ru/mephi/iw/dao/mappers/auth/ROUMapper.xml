@@ -25,7 +25,7 @@
         where rou_pk = #{id};
     </insert>
 
-    <delete id="deleteROU">
-        delete from investor_workspace.t_roles_of_users where rou_pk = #{id}
+    <delete id="deleteAllROUOfUser">
+        delete from investor_workspace.t_roles_of_users where rou_usr_fk = #{userId}
     </delete>
 </mapper>

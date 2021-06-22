@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:mcb = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/briefcases"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Мои портфели</title>
+</h:head>
+
+<h:body id="bodyBag">
+
+    <mc:Hat/>
+
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true" />
+        <h:outputStylesheet name="css/Center.css"/>
+        <h:outputStylesheet name="css/TextStyle.css"/>
+        <div class="center">
+            <p:panel style="max-width: 650px">
+
+                <mcb:SearchAndAddComponent update="form"/>
+
+                <p:dataTable id="table" var="brf" value="#{ub.briefcasesShow}">
+                    <p:column headerText="Имя портфеля">
+                        <h:outputText value="#{brf.name}"/>
+                    </p:column>
+                    <p:column headerText="Описание">
+                        <h:outputText value="#{brf.description}"/>
+                    </p:column>
+                    <p:column headerText="Действия">
+                        <p:commandButton action="#{ub.viewBriefcase(brf)}" icon="fa fa-eye"
+                                         style="margin: 0px 5px 5px 0px;"/>
+                        <p:commandButton icon="fa fa-trash" action="#{ub.prepareForDelete(brf)}"
+                                         onclick="PF('deleteBriefcaseDlg').show();"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+
+
+
+        <p:dialog header="Удаление портфеля" widgetVar="deleteBriefcaseDlg" height="100">
+            <div class="bubble" style="margin: 0px 5px 5px 5px;">Вы действительно хотите удалить портфель?</div>
+            <div class="center" id="center">
+                <p:commandButton id="btn" value="Принять изменения" ajax="true" update="form"
+                                 icon="fa fa-check" action="#{ub.deleteBriefcase}"
+                                 style="margin: 5px 5px 5px 5px;"/>
+                <p:commandButton value="Отмена" ajax="true" onclick="PF('deleteUserDlg').show();"
+                                 icon="fa fa-ban" update="form" action="#{ub.cancelDelete()}"
+                                 style="margin: 5px 5px 5px 0px;"/>
+            </div>
+        </p:dialog>
+    </h:form>
+
+</h:body>
+</html>

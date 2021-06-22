@@ -5,45 +5,44 @@ import org.apache.ibatis.session.SqlSession;
 import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.dao.mappers.auth.UserMapper;
 import ru.mephi.iw.dao.work.WorkWithCurrentUserInfo;
-import ru.mephi.iw.models.auth.Roles;
-import ru.mephi.iw.models.auth.User;
-
+import ru.mephi.iw.models.auth.collections.CurrentUserInfo;
+import ru.mephi.iw.security.PwdCoder;
+import ru.mephi.iw.ui.beans.hat.Hat;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @ManagedBean(name="profile")
 @ViewScoped
 @Data
 public class Profile implements Serializable {
 
-    @ManagedProperty(value = "#{auth}")
-    private Auth auth;
+    private CurrentUserInfo currentUserInfo;
+    private List<String> rolesOfUserS;
 
-    private User user;
+    private String pwdOld = "";
+    private String pwdOldU = "";
+    private PwdCoder pwdCoder = new PwdCoder();
 
-    private Set<String> rolesOfUserS;
+    @ManagedProperty(value = "#{hat}")
+    private Hat hat;
 
     @PostConstruct
     private void init() {
-        user = auth.getCurrentUserInfo().getUser();
-        rolesOfUserS = new HashSet<>();
-        for (Roles roles : auth.getCurrentUserInfo().getRolesOfUser()) {
-            rolesOfUserS.add(roles.getName());
-        }
+        currentUserInfo = (CurrentUserInfo) ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+                .getRequest()).getSession().getAttribute("user");
     }
 
     public void updateUser() {
         if (checkInfo()) {
             try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
                 try {
-                    sqlSession.getMapper(UserMapper.class).updateUser(user.getId(), user);
+                    sqlSession.getMapper(UserMapper.class).updateUser(currentUserInfo.getUser().getId(),
+                            currentUserInfo.getUser());
                     sqlSession.commit();
                 } catch (Exception e) {
                     try {
@@ -54,17 +53,22 @@ public class Profile implements Serializable {
                     }
                 }
             }
-            auth.getCurrentUserInfo().setUser(user);
-            auth.setUsername(user.getUsername());
+            hat.setUsername(currentUserInfo.getUser().getUsername());
             addMessage(FacesMessage.SEVERITY_INFO,
                     "Успех!", "Изменения приняты!");
         }
     }
 
     public String deleteUser() {
-        new WorkWithCurrentUserInfo().deleteUser(auth.getCurrentUserInfo());
-        auth.loginLogout();
-        return "/ru/mephi/iw/auth_pages/Auth.xhtml?faces-redirect=true";
+        if (!checkPwd(pwdOld)) {
+            pwdOld = "";
+            return "";
+
+        }
+        pwdOld = "";
+
+        new WorkWithCurrentUserInfo().deleteUser(currentUserInfo);
+        return hat.loginLogout();
     }
 
     private void addMessage(FacesMessage.Severity severity, String summary, String detail) {
@@ -76,18 +80,32 @@ public class Profile implements Serializable {
 
         boolean check = true;
 
-        if (!user.getPhone().matches("\\+7[0-9]{10}")) {
+        if (!checkPwd(pwdOldU)) {
+            check = false;
+        }
+        pwdOldU = "";
+
+        if (!currentUserInfo.getUser().getPhone().matches("\\+7[0-9]{10}")) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Телефон должен быть представлен в формате +7XXXXXXXXXX");
             check = false;
         }
 
-        if (!user.getEmail().matches(".+@[a-z]+\\.[a-z]+")) {
+        if (!currentUserInfo.getUser().getEmail().matches(".+@[a-z]+\\.[a-z]+")) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Email введён неправильно!");
             check = false;
         }
 
         return check;
+    }
+
+    private boolean checkPwd(String pwd) {
+        if (!pwdCoder.encodePwd(pwd).equals(hat.getCurrentUserInfo().getAuthInfo().getPwd())) {
+            addMessage(FacesMessage.SEVERITY_ERROR,
+                    "Ошибка!", "Неверный пароль!");
+            return false;
+        }
+        return true;
     }
 }

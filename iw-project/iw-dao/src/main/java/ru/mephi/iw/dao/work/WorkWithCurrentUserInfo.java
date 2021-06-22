@@ -5,13 +5,18 @@ import ru.mephi.iw.constants.RolesKeys;
 import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.dao.mappers.auth.*;
 import ru.mephi.iw.dao.mappers.auth.collections.CurrentUserInfoMapper;
+import ru.mephi.iw.dao.mappers.briefcases.BriefcasesMapper;
+import ru.mephi.iw.exceptions.IwRuntimeException;
 import ru.mephi.iw.models.auth.*;
 import ru.mephi.iw.models.auth.collections.CurrentUserInfo;
 import ru.mephi.iw.models.auth.collections.UsersInfoForAdmin;
+import ru.mephi.iw.models.briefcases.Briefcases;
 
 public class WorkWithCurrentUserInfo {
 
     public CurrentUserInfo insertUser(User user, AuthInfo authInfo) {
+        IwRuntimeException exception = null;
+        CurrentUserInfo currentUserInfo = null;
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
             try {
                 sqlSession.getMapper(UserMapper.class).insertUser(user);
@@ -20,34 +25,44 @@ public class WorkWithCurrentUserInfo {
                 sqlSession.getMapper(ROUMapper.class).insertROU(new RolesOfUsers(0, user.getId(), RolesKeys.USER_KEY, true));
                 sqlSession.getMapper(ROUMapper.class).insertROU(new RolesOfUsers(0, user.getId(), RolesKeys.ADMIN_KEY, false));
                 sqlSession.commit();
+                currentUserInfo = sqlSession.getMapper(CurrentUserInfoMapper.class)
+                        .selectCurrentUserInfo(authInfo.getLogin(), authInfo.getPwd());
             } catch (Exception ex) {
                 try {
                     sqlSession.rollback();
                 } catch (Exception ex1) {
                     ex.addSuppressed(ex1);
                 }
-                throw ex;
+                exception = new IwRuntimeException("Внутренняя ошибка!", ex);
             }
-            return sqlSession.getMapper(CurrentUserInfoMapper.class).selectCurrentUserInfo(authInfo.getLogin(), authInfo.getPwd());
         }
+
+        if (exception != null) {
+            throw exception;
+        }
+        return currentUserInfo;
     }
 
+
     public void deleteUser(CurrentUserInfo currentUserInfo) {
+        met(currentUserInfo.getId());
+    }
+
+    private void met(int id) {
+        IwRuntimeException exception = null;
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
             try {
 
-                AuthInfoMapper authInfoMapper = sqlSession.getMapper(AuthInfoMapper.class);
-                for (AuthInfo authInfo : sqlSession.getMapper(AuthInfoMapper.class).
-                        selectAuthInfoOfUser(currentUserInfo.getId())) {
-                    authInfoMapper.deleteAuthInfo(authInfo.getId());
+                sqlSession.getMapper(AuthInfoMapper.class).deleteAllAuthInfoOfUser(id);
+
+                sqlSession.getMapper(ROUMapper.class).deleteAllROUOfUser(id);
+
+                BriefcasesMapper briefcasesMapper = sqlSession.getMapper(BriefcasesMapper.class);
+                for (Briefcases briefcase : briefcasesMapper.selectBriefcasesOfUser(id)) {
+                    new WorkWithBriefcases().deleteBriefcase(briefcase);
                 }
 
-                ROUMapper rouMapper = sqlSession.getMapper(ROUMapper.class);
-                for (RolesOfUsers roles : sqlSession.getMapper(ROUMapper.class).selectROU(currentUserInfo.getId())) {
-                    rouMapper.deleteROU(roles.getId());
-                }
-
-                sqlSession.getMapper(UserMapper.class).deleteUser(currentUserInfo.getUser().getId());
+                sqlSession.getMapper(UserMapper.class).deleteUser(id);
 
                 sqlSession.commit();
             } catch (Exception e) {
@@ -56,43 +71,22 @@ public class WorkWithCurrentUserInfo {
                     throw e;
                 } catch (Exception e1) {
                     e.addSuppressed(e1);
-                    throw e;
+                    exception = new IwRuntimeException("Внутренняя ошибка!", e);
                 }
+            }
+
+            if (exception != null) {
+                throw exception;
             }
         }
     }
 
     public void deleteUser(UsersInfoForAdmin usersInfoForAdmin) {
-        try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
-            try {
-
-                AuthInfoMapper authInfoMapper = sqlSession.getMapper(AuthInfoMapper.class);
-                for (AuthInfo authInfo : usersInfoForAdmin.getAuthInfo()) {
-                    authInfoMapper.deleteAuthInfo(authInfo.getId());
-                }
-
-                ROUMapper rouMapper = sqlSession.getMapper(ROUMapper.class);
-                for (RolesOfUsers roles : usersInfoForAdmin.getRolesOfUser()) {
-                    rouMapper.deleteROU(roles.getId());
-                }
-
-                sqlSession.getMapper(UserMapper.class).deleteUser(usersInfoForAdmin.getUser().getId());
-
-                sqlSession.commit();
-
-            } catch (Exception e) {
-                try {
-                    sqlSession.rollback();
-                    throw e;
-                } catch (Exception e1) {
-                    e.addSuppressed(e1);
-                    throw e;
-                }
-            }
-        }
+        met(usersInfoForAdmin.getId());
     }
 
-    public void updateAuthInfo(AuthInfo authInfo) {
+    public void updateAuthInfo (AuthInfo authInfo){
+        IwRuntimeException exception = null;
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
             try {
                 sqlSession.getMapper(AuthInfoMapper.class).updateAuthInfo(authInfo.getId(), authInfo);
@@ -103,10 +97,13 @@ public class WorkWithCurrentUserInfo {
                     throw e;
                 } catch (Exception e1) {
                     e.addSuppressed(e1);
-                    throw e;
+                    exception = new IwRuntimeException("Внутренняя ошибка!", e);
                 }
+            }
+
+            if (exception != null) {
+                throw exception;
             }
         }
     }
-
 }

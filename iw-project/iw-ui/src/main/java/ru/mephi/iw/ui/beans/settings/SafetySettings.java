@@ -6,7 +6,7 @@ import ru.mephi.iw.dao.initialization.Initial;
 import ru.mephi.iw.dao.mappers.auth.AuthInfoMapper;
 import ru.mephi.iw.dao.work.WorkWithCurrentUserInfo;
 import ru.mephi.iw.models.auth.AuthInfo;
-import ru.mephi.iw.ui.beans.auth_pages.Auth;
+import ru.mephi.iw.ui.beans.hat.Hat;
 import ru.mephi.iw.security.PwdCoder;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -21,9 +21,6 @@ import java.io.Serializable;
 @Data
 public class SafetySettings implements Serializable {
 
-    @ManagedProperty(value = "#{auth}")
-    private Auth auth;
-
     private String login;
     private String pwd = "";
     private String pwd1 = "";
@@ -32,37 +29,33 @@ public class SafetySettings implements Serializable {
 
     private PwdCoder pwdCoder = new PwdCoder();
 
+    @ManagedProperty(value = "#{hat}")
+    private Hat hat;
+
     @PostConstruct
     private void init() {
-        login = auth.getCurrentUserInfo().getAuthInfo().getLogin();
+        login = hat.getCurrentUserInfo().getAuthInfo().getLogin();
     }
 
     public void updateLog() {
 
         if (!checkLog()) {
-            login = auth.getCurrentUserInfo().getAuthInfo().getLogin();
+            login = hat.getCurrentUserInfo().getAuthInfo().getLogin();
             return;
         }
 
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
 
-            AuthInfo authInfo = sqlSession.getMapper(AuthInfoMapper.class).selectAuthInfo(login);
+            AuthInfo hatInfoNew = hat.getCurrentUserInfo().getAuthInfo();
+            hatInfoNew.setLogin(login);
 
-            if (authInfo != null) {
-                addMessage(FacesMessage.SEVERITY_ERROR,
-                        "Ошибка!", "Пользователь с таким логином уже существует!");
-            }
-
-            AuthInfo authInfoNew = auth.getCurrentUserInfo().getAuthInfo();
-            authInfoNew.setLogin(login);
-
-            new WorkWithCurrentUserInfo().updateAuthInfo(authInfoNew);
+            new WorkWithCurrentUserInfo().updateAuthInfo(hatInfoNew);
         }
 
         addMessage(FacesMessage.SEVERITY_INFO,
                 "Успех!", "Изменения приняты!");
 
-        login = auth.getCurrentUserInfo().getAuthInfo().getLogin();
+        login = hat.getCurrentUserInfo().getAuthInfo().getLogin();
     }
 
     private boolean checkLog() {
@@ -71,16 +64,16 @@ public class SafetySettings implements Serializable {
             return false;
         }
 
-        if (login.equals(auth.getCurrentUserInfo().getAuthInfo().getLogin())) {
+        if (login.equals(hat.getCurrentUserInfo().getAuthInfo().getLogin())) {
             addMessage(FacesMessage.SEVERITY_WARN,
                     "Предупреждение!", "Логин должен отличаться от старого!");
             return false;
         }
 
         try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
-            AuthInfo authInfo = sqlSession.getMapper(AuthInfoMapper.class).selectAuthInfo(login);
+            AuthInfo hatInfo = sqlSession.getMapper(AuthInfoMapper.class).selectAuthInfo(login);
 
-            if (authInfo != null) {
+            if (hatInfo != null) {
                 addMessage(FacesMessage.SEVERITY_WARN,
                         "Предупреждение!", "Пользователь с таким логином уже существует!");
                 return false;
@@ -100,11 +93,10 @@ public class SafetySettings implements Serializable {
 
         pwd = pwdCoder.encodePwd(pwd);
 
+        AuthInfo hatInfoNew = hat.getCurrentUserInfo().getAuthInfo();
+        hatInfoNew.setPwd(pwd);
 
-        AuthInfo authInfoNew = auth.getCurrentUserInfo().getAuthInfo();
-        authInfoNew.setPwd(pwd);
-
-        new WorkWithCurrentUserInfo().updateAuthInfo(authInfoNew);
+        new WorkWithCurrentUserInfo().updateAuthInfo(hatInfoNew);
 
         addMessage(FacesMessage.SEVERITY_INFO,
                 "Успех!", "Изменения приняты!");
@@ -123,7 +115,7 @@ public class SafetySettings implements Serializable {
             return false;
         }
 
-        if (pwdCoder.encodePwd(pwd).equals(auth.getCurrentUserInfo().getAuthInfo().getPwd())) {
+        if (pwdCoder.encodePwd(pwd).equals(hat.getCurrentUserInfo().getAuthInfo().getPwd())) {
             addMessage(FacesMessage.SEVERITY_WARN,
                     "Предупреждение: Пароль не изменился!",
                     "Пароль должен отличаться от старого!");
@@ -147,7 +139,7 @@ public class SafetySettings implements Serializable {
 
     private boolean checkInfo() {
 
-        if (!pwdCoder.encodePwd(pwdOld).equals(auth.getCurrentUserInfo().getAuthInfo().getPwd())) {
+        if (!pwdCoder.encodePwd(pwdOld).equals(hat.getCurrentUserInfo().getAuthInfo().getPwd())) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Неверный пароль!");
             return true;

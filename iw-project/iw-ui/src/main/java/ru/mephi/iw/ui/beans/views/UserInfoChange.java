@@ -4,20 +4,29 @@ import lombok.Data;
 import org.apache.ibatis.session.SqlSession;
 import ru.mephi.iw.constants.RolesKeys;
 import ru.mephi.iw.dao.initialization.Initial;
-import ru.mephi.iw.dao.mappers.auth.AuthInfoMapper;
 import ru.mephi.iw.dao.mappers.auth.ROUMapper;
+import ru.mephi.iw.dao.mappers.auth.collections.UsersInfoForAdminMapper;
 import ru.mephi.iw.dao.work.WorkWithCurrentUserInfo;
+import ru.mephi.iw.exceptions.IwRuntimeException;
 import ru.mephi.iw.models.auth.AuthInfo;
 import ru.mephi.iw.models.auth.RolesOfUsers;
 import ru.mephi.iw.models.auth.collections.UsersInfoForAdmin;
 import ru.mephi.iw.security.PwdCoder;
+import ru.mephi.iw.ui.beans.hat.Hat;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +35,8 @@ import java.util.List;
 @Data
 public class UserInfoChange implements Serializable {
 
-    @ManagedProperty(value = "#{usersView}")
-    UsersView usersView;
+    @ManagedProperty(value = "#{hat}")
+    private Hat hat;
 
     UsersInfoForAdmin user;
 
@@ -45,19 +54,47 @@ public class UserInfoChange implements Serializable {
 
     @PostConstruct
     private void init() {
-        user = usersView.getSelectedUserForUpdate();
-        for (RolesOfUsers role : user.getRolesOfUser()) {
-            switch (role.getRoleId()) {
-                case RolesKeys.ADMIN_KEY:
-                    adminRole = role;
-                    break;
-                case RolesKeys.USER_KEY:
-                    userRole = role;
+        String userId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
+                .getParameter("id");
+        if (userId != null) {
+            try (SqlSession sqlSession = Initial.SQL_SESSION_FACTORY.openSession()) {
+                user = sqlSession.getMapper(UsersInfoForAdminMapper.class).selectUserInfo(Integer.parseInt(userId));
+            } catch (Exception e) {
+                err();
+                return;
             }
+            if (user != null) {
+                for (RolesOfUsers role : user.getRolesOfUser()) {
+                    switch (role.getRoleId()) {
+                        case RolesKeys.ADMIN_KEY:
+                            adminRole = role;
+                            break;
+                        case RolesKeys.USER_KEY:
+                            userRole = role;
+                    }
+                }
+                logins = new ArrayList<>();
+                for (AuthInfo authInfo : user.getAuthInfo()) {
+                    logins.add(authInfo.getLogin());
+                }
+            } else {
+                err();
+            }
+        } else {
+            err();
         }
-        logins = new ArrayList<>();
-        for (AuthInfo authInfo : user.getAuthInfo()) {
-            logins.add(authInfo.getLogin());
+    }
+
+    private void err() {
+        try {
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+
+            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
+                    .getExternalContext().getResponse();
+            response.sendRedirect(request.getContextPath() + "/ru/mephi/iw/views/UsersView.xhtml");
+        } catch (Exception e) {
+            throw new IwRuntimeException("", e);
         }
     }
 
@@ -82,7 +119,8 @@ public class UserInfoChange implements Serializable {
 
         if (authInfo == null) {
             addMessage(FacesMessage.SEVERITY_WARN,
-                    "Предупреждение!", "Такой логин у пользователя не существует! \nВозможно, только что был удалён");
+                    "Предупреждение!", "Такой логин у пользователя не существует! \n" +
+                            "Возможно, только что был удалён");
             return;
         }
         authInfo.setPwd(pwdCoder.encodePwd(pwd));
@@ -138,7 +176,7 @@ public class UserInfoChange implements Serializable {
 
     private boolean checkInfo() {
 
-        if (!pwdCoder.encodePwd(pwdOld).equals(usersView.getAuth().getCurrentUserInfo().getAuthInfo().getPwd())) {
+        if (!pwdCoder.encodePwd(pwdOld).equals(hat.getCurrentUserInfo().getAuthInfo().getPwd())) {
             addMessage(FacesMessage.SEVERITY_ERROR,
                     "Ошибка!", "Неверный пароль!");
             return true;

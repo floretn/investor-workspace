@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="update"/>
+</composite:interface>
+
+<composite:implementation>
+
+    <p:commandButton id="search" value="Критерии поиска" icon="fa fa-search"
+                     style="margin: 0px 5px 5px 0px;"/>
+    <p:commandButton value="Добавить портфель"  icon="fa fa-plus" action="#{ub.goToAddBriefcase()}"/>
+
+    <p:overlayPanel for="search" style="width:350px">
+        <br/>
+        <span class="ui-float-label">
+                    <p:inputText value="#{ub.nameSearch}"/>
+                    <p:outputLabel for="@previous" value="Имя портфеля"/>
+                </span>
+
+        <br/>
+        <span class="ui-float-label">
+                    <p:inputText value="#{ub.descSearch}"/>
+                    <p:outputLabel for="@previous" value="Описание"/>
+                </span>
+
+        <br/>
+        <p:commandButton icon="fa fa-search" action="#{ub.updateBriefcases}"
+                         update="#{cc.attrs.update}"
+                         style="margin: 0px 5px 5px 0px;"/>
+        <p:commandButton icon="fa fa-trash" action="#{ub.trash}" update="#{cc.attrs.update}"/>
+    </p:overlayPanel>
+
+</composite:implementation>
+</html>

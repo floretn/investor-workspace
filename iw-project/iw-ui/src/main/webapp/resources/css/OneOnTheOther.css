@@ -1,0 +1,8 @@
+.one {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
+.other {
+    position: relative;
+}

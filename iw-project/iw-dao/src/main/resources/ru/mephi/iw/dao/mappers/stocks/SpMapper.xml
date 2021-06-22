@@ -11,8 +11,17 @@
         <result column="sp_price" property="price"/>
     </resultMap>
 
+    <select id="selectPriceForStockByDate" resultMap="SpMap">
+        select * from investor_workspace.t_stocks_prices where sp_stck_fk = #{stockId} and sp_time_set > #{date}
+            and sp_time_set <![CDATA[<]]> #{date} + integer '1'
+    </select>
+
     <insert id="insertSp" useGeneratedKeys="true" keyProperty="id" keyColumn="sp_pk">
         insert into investor_workspace.t_stocks_prices (sp_stck_fk, sp_cur_fk, sp_time_set, sp_price)
         values (#{sp.stockId}, #{sp.currencyId}, #{sp.settingTime}, #{sp.price});
     </insert>
+
+    <delete id="deleteSp">
+        delete from investor_workspace.t_stocks_prices where sp_pk = #{id}
+    </delete>
 </mapper>

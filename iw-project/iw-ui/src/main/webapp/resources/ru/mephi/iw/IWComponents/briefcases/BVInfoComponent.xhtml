@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html  xmlns = "http://www.w3.org/1999/xhtml"
+       xmlns:h = "http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:composite = "http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+    <h:outputStylesheet name="css/StyleForFileUploadBtn.css"/>
+    <h:form id="fileUpload"  enctype="multipart/form-data">
+
+        <div class="bubble1">Информация о портфеле</div>
+
+        <br/>
+
+        <span class="ui-float-label" style="margin: 0 0 10px 0;">
+            <p:inputText id="float-upsert_login" value="#{bv.currentBriefcase.briefcase.name}" required="true"
+                         requiredMessage="Имя портфеля обязательно!"/>
+            <p:outputLabel for="@previous" value="Имя портфеля"/>
+        </span>
+
+        <br/>
+
+        <span class="ui-float-label" style="margin: 0 0 5px 0;">
+            <p:inputTextarea id="float-upsert_pwd" rows="3" cols="22" value="#{bv.currentBriefcase.briefcase.description}"/>
+            <p:outputLabel for="@previous" value="Описание"/>
+        </span>
+
+        <p:commandButton ajax="false" action="#{bv.uploadData()}" value="Изменить данные"
+                         icon="fa fa-check"/>
+    </h:form>
+</composite:implementation>
+
+</html>

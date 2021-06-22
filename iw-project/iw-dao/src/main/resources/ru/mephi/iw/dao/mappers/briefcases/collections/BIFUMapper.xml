@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.collections.BIFUMapper">
+
+    <resultMap id="BIFUMap" type="ru.mephi.iw.models.briefcases.collections.BriefcaseInfoForUser">
+
+        <id column="brf_pk" property="id"/>
+
+        <association property="briefcase" resultMap="ru.mephi.iw.dao.mappers.briefcases.BriefcasesMapper.BriefcasesMap"
+                     javaType="ru.mephi.iw.models.briefcases.Briefcases"/>
+
+        <association property="briefcaseState" resultMap="ru.mephi.iw.dao.mappers.briefcases.BSMapper.BSMap"
+                     javaType="ru.mephi.iw.models.briefcases.BriefcaseStates"/>
+
+        <collection property="accounts" javaType="java.util.HashSet" ofType="ru.mephi.iw.models.briefcases.Account"
+                    resultMap="ru.mephi.iw.dao.mappers.briefcases.AccountMapper.AccountMap"/>
+
+        <collection property="stocksInBriefcase" javaType="java.util.HashSet"
+                    ofType="ru.mephi.iw.models.briefcases.StocksInBriefcases"
+                    resultMap="ru.mephi.iw.dao.mappers.briefcases.SIBMapper.SIBMap"/>
+
+        <collection property="stockPrices" javaType="java.util.HashSet"
+                    ofType="ru.mephi.iw.models.stocks.associations.StockAndPrice"
+                    resultMap="ru.mephi.iw.dao.mappers.stocks.association.SAPMapper.SAPMap"/>
+
+    </resultMap>
+
+    <select id="selectLastBIFU" resultMap="BIFUMap">
+        select *
+        from (
+        select * from investor_workspace.t_briefcases b
+        left join investor_workspace.t_briefcases_states bs on (bs.bs_brf_fk = b.brf_pk)
+        where b.brf_pk = #{briefcaseId}
+        order by bs.bs_date desc
+        limit 1
+        ) p
+        left join investor_workspace.t_account a on (a.acc_bs_fk = p.bs_pk)
+        left join investor_workspace.t_stocks_in_briefcases sib on (sib.sib_bs_fk = p.bs_pk)
+        left join investor_workspace.t_stocks s on (s.stck_pk = sib.sib_stck_fk)
+        left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = s.stck_pk)
+        left join investor_workspace.t_currency cur on (cur.cur_pk = sp.sp_cur_fk)
+        where sp_time_set > p.bs_date and sp_time_set <![CDATA[<]]> p.bs_date + integer '1'
+    </select>
+
+    <select id="selectLastBIFUByDate" resultMap="BIFUMap">
+        select *
+        from (
+                 select * from investor_workspace.t_briefcases b
+                                   left join investor_workspace.t_briefcases_states bs on (bs.bs_brf_fk = b.brf_pk)
+                 where b.brf_pk = #{briefcaseId} and bs.bs_date = #{date}
+                 order by bs.bs_date desc
+                     limit 1
+             ) p
+                 left join investor_workspace.t_account a on (a.acc_bs_fk = p.bs_pk)
+                 left join investor_workspace.t_stocks_in_briefcases sib on (sib.sib_bs_fk = p.bs_pk)
+                 left join investor_workspace.t_stocks s on (s.stck_pk = sib.sib_stck_fk)
+                 left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = s.stck_pk)
+                 left join investor_workspace.t_currency cur on (cur.cur_pk = sp.sp_cur_fk)
+        where sp_time_set > p.bs_date and sp_time_set <![CDATA[<]]> p.bs_date + integer '1'
+    </select>
+</mapper>

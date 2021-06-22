@@ -12,5 +12,5 @@ public interface ROUMapper {
 
     void updateROUStatus(@Param("id") int id, @Param("rou") RolesOfUsers rou);
 
-    void deleteROU(@Param("id") int id);
+    void deleteAllROUOfUser(@Param("userId") int userId);
 }

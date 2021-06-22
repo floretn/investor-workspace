@@ -19,11 +19,19 @@
 
     </resultMap>
 
+    <select id="selectAllUsersInfo" resultMap="UserInfoForAdminMap">
+        select  *
+        from investor_workspace.t_users u
+                 left join investor_workspace.t_auth_info ai on (ai.ai_usr_fk = u.usr_pk)
+                 left join investor_workspace.t_roles_of_users rou on (rou.rou_usr_fk = u.usr_pk)
+    </select>
+
     <select id="selectUserInfo" resultMap="UserInfoForAdminMap">
         select  *
         from investor_workspace.t_users u
                  left join investor_workspace.t_auth_info ai on (ai.ai_usr_fk = u.usr_pk)
                  left join investor_workspace.t_roles_of_users rou on (rou.rou_usr_fk = u.usr_pk)
+        where u.usr_pk = #{userId}
     </select>
 
 </mapper>

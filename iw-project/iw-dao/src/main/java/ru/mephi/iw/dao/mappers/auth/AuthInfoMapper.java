@@ -11,9 +11,11 @@ public interface AuthInfoMapper {
 
     AuthInfo selectAuthInfo(@Param("login") String login);
 
+    AuthInfo selectAuthInfoByLogAndPwd(@Param("login") String login, @Param("pwd") String pwd);
+
     void insertAuthInfo(@Param("authInfo")AuthInfo authInfo);
 
     void updateAuthInfo(@Param("id") int id, @Param("authInfo")AuthInfo authInfo);
 
-    void deleteAuthInfo(@Param("id") int id);
+    void deleteAllAuthInfoOfUser(@Param("userId") int userId);
 }

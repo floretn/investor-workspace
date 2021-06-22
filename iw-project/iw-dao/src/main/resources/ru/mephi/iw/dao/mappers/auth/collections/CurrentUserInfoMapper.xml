@@ -33,4 +33,14 @@
         where ai.ai_login = #{login} and ai.ai_pwd = #{pwd} and rou.rou_status = true
     </select>
 
+    <select id="selectAllCurrentUserInfo" resultMap="CurrentUserInfoMap">
+        select usr_pk, usr_lnm, usr_fnm, usr_ptrnm, usr_phn, usr_email, usr_un, null as rol_pk, null as rol_name
+        from investor_workspace.t_users
+        union
+        select usr_pk, usr_lnm, usr_fnm, usr_ptrnm, usr_phn, usr_email, usr_un, rol_pk, rol_name
+        from investor_workspace.t_users u
+                 join investor_workspace.t_roles_of_users rou on (rou.rou_usr_fk = u.usr_pk)
+                 join investor_workspace.t_roles r on (rou.rou_rol_fk = r.rol_pk)
+        where rou.rou_status = true
+    </select>
 </mapper>

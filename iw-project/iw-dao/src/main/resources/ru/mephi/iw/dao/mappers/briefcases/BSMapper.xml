@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.BSMapper">
+    <resultMap id="BSMap" type="ru.mephi.iw.models.briefcases.BriefcaseStates">
+        <id column="bs_pk" property="id"/>
+        <result column="bs_brf_fk" property="briefcaseId"/>
+        <result column="bs_fl_fk" property="fileId"/>
+        <result column="bs_date" property="date"/>
+    </resultMap>
+
+    <select id="selectLastBSOfBriefcase" resultMap="BSMap">
+        select * from investor_workspace.t_briefcases_states where bs_brf_fk = #{briefcaseId}
+        order by bs_date desc
+        limit 1
+    </select>
+
+    <select id="selectBSOfBriefcaseByDate" resultMap="BSMap">
+        select * from investor_workspace.t_briefcases_states where bs_brf_fk = #{briefcaseId}
+                                                               and bs_date = #{date}
+    </select>
+
+    <select id="selectAllBSOfBriefcase" resultMap="BSMap">
+        select * from investor_workspace.t_briefcases_states where bs_brf_fk = #{briefcaseId}
+    </select>
+
+    <insert id="insertBS" useGeneratedKeys="true" keyProperty="id" keyColumn="bs_pk">
+        insert into investor_workspace.t_briefcases_states (bs_brf_fk, bs_fl_fk, bs_date)
+        values (#{bs.briefcaseId}, #{bs.fileId}, #{bs.date});
+    </insert>
+
+    <delete id="deleteBS">
+        delete from investor_workspace.t_briefcases_states where bs_pk = #{id}
+    </delete>
+
+</mapper>
