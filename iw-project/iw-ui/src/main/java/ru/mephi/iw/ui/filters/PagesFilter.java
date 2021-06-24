@@ -3,14 +3,11 @@ package ru.mephi.iw.ui.filters;
 import ru.mephi.iw.models.auth.Pages;
 import ru.mephi.iw.models.auth.collections.CurrentUserInfo;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Set;
 
 @WebFilter
@@ -39,7 +36,6 @@ public class PagesFilter implements Filter {
                     .forward(request, response);
             return;
         }
-
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
@@ -54,6 +50,5 @@ public class PagesFilter implements Filter {
 
     @Override
     public void destroy() {
-
     }
 }

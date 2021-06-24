@@ -41,6 +41,7 @@ public class UpsertBriefcase {
     /**Для поиска остатка средств у инвестора и игнорирования оценки активов и пр.*/
     private static final String REMAINING = "Исходящий остаток (факт)";
 
+    //TODO сделать добавление нового портфеля по дате!!!
     public void addBriefcase(String fileName, File fileXML, Briefcases briefcase) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = documentBuilder.parse(fileXML);
@@ -69,6 +70,7 @@ public class UpsertBriefcase {
         }
     }
 
+    //TODO сделать проверку на дату!!!
     public void uploadBriefcase(String fileName, File fileXML, Briefcases briefcase, LocalDate localDate) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = documentBuilder.parse(fileXML);
@@ -134,7 +136,7 @@ public class UpsertBriefcase {
 
             if (namedNodeMap.getNamedItem("row_name") != null) {
                 rowName = namedNodeMap.getNamedItem("row_name").getNodeValue();
-                Currency currency = findCurrency(namedNodeMap.getNamedItem("currency").getNodeValue(), sqlSession);
+                Currency currency = findCurrency(namedNodeMap, sqlSession);
 
                 if (rowName.contains(REMAINING)) {
                     sqlSession.getMapper(AccountMapper.class).insertAccount
@@ -148,7 +150,7 @@ public class UpsertBriefcase {
 
     private void insertSP(int stockId, LocalDate localDate, NamedNodeMap namedNodeMap, SqlSession sqlSession) {
 
-        Currency currency = findCurrency(namedNodeMap.getNamedItem("price_currency").getNodeValue(), sqlSession);
+        Currency currency = findCurrency(namedNodeMap, sqlSession);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -158,13 +160,14 @@ public class UpsertBriefcase {
         sqlSession.getMapper(SpMapper.class).insertSp(stockPrice);
     }
 
-    private Currency findCurrency(String currencyName, SqlSession sqlSession) {
+    private Currency findCurrency(NamedNodeMap namedNodeMap, SqlSession sqlSession) {
 
         Currency currency = sqlSession.getMapper(CurrencyMapper.class)
-                .selectCurrencyByName(currencyName);
+                .selectCurrencyByName(namedNodeMap.getNamedItem("currency").getNodeValue());
 
         if (currency == null) {
-            currency = new Currency(0, currencyName);
+            currency = new Currency(0, namedNodeMap.getNamedItem("currency").getNodeValue()
+                    , Double.parseDouble(namedNodeMap.getNamedItem("currency_course").getNodeValue()));
             sqlSession.getMapper(CurrencyMapper.class).insertCurrency(currency);
         }
 

@@ -36,6 +36,7 @@
         <mapper resource="ru/mephi/iw/dao/mappers/auth/collections/UsersInfoForAdminMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/auth/collections/CurrentUserInfoMapper.xml"/>
         <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/PriceStockInIndexMapper.xml"/>
-        <mapper resource="ru/mephi/iw/dao/mappers/stocks/association/SAPMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/associations/AACMapper.xml"/>
+        <mapper resource="ru/mephi/iw/dao/mappers/briefcases/associations/SPSMapper.xml"/>
     </mappers>
 </configuration>

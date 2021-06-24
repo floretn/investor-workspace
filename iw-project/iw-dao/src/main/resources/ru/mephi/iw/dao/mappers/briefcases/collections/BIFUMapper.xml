@@ -15,21 +15,21 @@
         <association property="briefcaseState" resultMap="ru.mephi.iw.dao.mappers.briefcases.BSMapper.BSMap"
                      javaType="ru.mephi.iw.models.briefcases.BriefcaseStates"/>
 
-        <collection property="accounts" javaType="java.util.HashSet" ofType="ru.mephi.iw.models.briefcases.Account"
-                    resultMap="ru.mephi.iw.dao.mappers.briefcases.AccountMapper.AccountMap"/>
+        <collection property="accountAndCurrencies" javaType="java.util.HashSet"
+                    ofType="ru.mephi.iw.models.briefcases.associations.AccountAndCurrency"
+                    resultMap="ru.mephi.iw.dao.mappers.briefcases.associations.AACMapper.AACMap"/>
 
-        <collection property="stocksInBriefcase" javaType="java.util.HashSet"
-                    ofType="ru.mephi.iw.models.briefcases.StocksInBriefcases"
-                    resultMap="ru.mephi.iw.dao.mappers.briefcases.SIBMapper.SIBMap"/>
-
-        <collection property="stockPrices" javaType="java.util.HashSet"
-                    ofType="ru.mephi.iw.models.stocks.associations.StockAndPrice"
-                    resultMap="ru.mephi.iw.dao.mappers.stocks.association.SAPMapper.SAPMap"/>
+        <collection property="stockAndPriceAndSIBs" javaType="java.util.HashSet"
+                    ofType="ru.mephi.iw.models.briefcases.associations.StockAndPriceAndSIB"
+                    resultMap="ru.mephi.iw.dao.mappers.briefcases.associations.SPSMapper.SPSMap"/>
 
     </resultMap>
 
     <select id="selectLastBIFU" resultMap="BIFUMap">
-        select *
+        select brf_pk, brf_usr_fk, brf_name, brf_desc, bs_pk, bs_brf_fk, bs_fl_fk, bs_date, acc_pk, acc_bs_fk
+             , acc_cur_fk, acc_am, cr.cur_pk as a_cur_pk, cr.cur_name as a_cur_name, cr.cur_course as a_cur_course, sib_pk, sib_bs_fk
+             , sib_stck_fk, sib_stck_num, sib_type, stck_pk, stck_cmpn_fk, stck_name, stck_ticker, sp_pk, sp_stck_fk, sp_cur_fk
+             , sp_time_set, sp_price, cur.cur_pk as cur_pk, cur.cur_name, cur.cur_course as cur_course
         from (
         select * from investor_workspace.t_briefcases b
         left join investor_workspace.t_briefcases_states bs on (bs.bs_brf_fk = b.brf_pk)
@@ -38,6 +38,7 @@
         limit 1
         ) p
         left join investor_workspace.t_account a on (a.acc_bs_fk = p.bs_pk)
+        left join investor_workspace.t_currency cr on (cr.cur_pk = a.acc_cur_fk)
         left join investor_workspace.t_stocks_in_briefcases sib on (sib.sib_bs_fk = p.bs_pk)
         left join investor_workspace.t_stocks s on (s.stck_pk = sib.sib_stck_fk)
         left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = s.stck_pk)
@@ -45,16 +46,40 @@
         where sp_time_set > p.bs_date and sp_time_set <![CDATA[<]]> p.bs_date + integer '1'
     </select>
 
-    <select id="selectLastBIFUByDate" resultMap="BIFUMap">
-        select *
+    <select id="selectBIFUByDate" resultMap="BIFUMap">
+        select brf_pk, brf_usr_fk, brf_name, brf_desc, bs_pk, bs_brf_fk, bs_fl_fk, bs_date, acc_pk, acc_bs_fk
+             , acc_cur_fk, acc_am, cr.cur_pk as a_cur_pk, cr.cur_name as a_cur_name, cr.cur_course as a_cur_course, sib_pk, sib_bs_fk
+             , sib_stck_fk, sib_stck_num, sib_type, stck_pk, stck_cmpn_fk, stck_name, stck_ticker, sp_pk, sp_stck_fk, sp_cur_fk
+             , sp_time_set, sp_price, cur.cur_pk as cur_pk, cur.cur_name, cur.cur_course as cur_course
         from (
                  select * from investor_workspace.t_briefcases b
                                    left join investor_workspace.t_briefcases_states bs on (bs.bs_brf_fk = b.brf_pk)
                  where b.brf_pk = #{briefcaseId} and bs.bs_date = #{date}
-                 order by bs.bs_date desc
-                     limit 1
              ) p
                  left join investor_workspace.t_account a on (a.acc_bs_fk = p.bs_pk)
+                 left join investor_workspace.t_currency cr on (cr.cur_pk = a.acc_cur_fk)
+                 left join investor_workspace.t_stocks_in_briefcases sib on (sib.sib_bs_fk = p.bs_pk)
+                 left join investor_workspace.t_stocks s on (s.stck_pk = sib.sib_stck_fk)
+                 left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = s.stck_pk)
+                 left join investor_workspace.t_currency cur on (cur.cur_pk = sp.sp_cur_fk)
+        where sp_time_set > p.bs_date and sp_time_set <![CDATA[<]]> p.bs_date + integer '1'
+    </select>
+
+    <select id="selectAllLastBIFU" resultMap="BIFUMap">
+        select brf_pk, brf_usr_fk, brf_name, brf_desc, bs_pk, bs_brf_fk, bs_fl_fk, bs_date, acc_pk, acc_bs_fk
+             , acc_cur_fk, acc_am, cr.cur_pk as a_cur_pk, cr.cur_name as a_cur_name, cr.cur_course as a_cur_course, sib_pk, sib_bs_fk
+             , sib_stck_fk, sib_stck_num, sib_type, stck_pk, stck_cmpn_fk, stck_name, stck_ticker, sp_pk, sp_stck_fk, sp_cur_fk
+             , sp_time_set, sp_price, cur.cur_pk as cur_pk, cur.cur_name, cur.cur_course as cur_course
+        from (
+                 select * from investor_workspace.t_briefcases b
+                                   left join investor_workspace.t_briefcases_states bs on (
+                                       bs.bs_date = (select max(bs_date) from investor_workspace.t_briefcases_states
+                                                            where bs_brf_fk = b.brf_pk)
+                                       )
+                 where b.brf_usr_fk = #{userId}
+             ) p
+                 left join investor_workspace.t_account a on (a.acc_bs_fk = p.bs_pk)
+                 left join investor_workspace.t_currency cr on (cr.cur_pk = a.acc_cur_fk)
                  left join investor_workspace.t_stocks_in_briefcases sib on (sib.sib_bs_fk = p.bs_pk)
                  left join investor_workspace.t_stocks s on (s.stck_pk = sib.sib_stck_fk)
                  left join investor_workspace.t_stocks_prices sp on (sp.sp_stck_fk = s.stck_pk)

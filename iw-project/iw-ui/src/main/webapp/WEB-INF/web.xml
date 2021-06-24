@@ -34,17 +34,21 @@
   </context-param>
 
   <filter>
+    <filter-name>ExistsPageFilter</filter-name>
+    <filter-class>ru.mephi.iw.ui.filters.ExistsPageFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ExistsPageFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+
+  <filter>
     <filter-name>LoginFilter</filter-name>
     <filter-class>ru.mephi.iw.ui.filters.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>
-    <url-pattern>/ru/mephi/iw/auth_pages/Profile.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/IMOEX/DownloadIMOEX.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/settings/SafetySettings.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/views/UsersView.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/views/UserInfoChange.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/briefcases/UserBriefcases.xhtml</url-pattern>
+    <url-pattern>*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -53,11 +57,9 @@
   </filter>
   <filter-mapping>
     <filter-name>PagesFilter</filter-name>
-    <url-pattern>/ru/mephi/iw/IMOEX/DownloadIMOEX.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/views/UsersView.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/views/UserInfoChange.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/briefcases/UserBriefcases.xhtml</url-pattern>
-    <url-pattern>/ru/mephi/iw/briefcases/BriefcaseView.xhtml</url-pattern>
+    <url-pattern>/ru/mephi/iw/indexes/*</url-pattern>
+    <url-pattern>/ru/mephi/iw/users/*</url-pattern>
+    <url-pattern>/ru/mephi/iw/briefcases/*</url-pattern>
   </filter-mapping>
 
 </web-app>

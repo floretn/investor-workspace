@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
+      xmlns:mcb = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/briefcases"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Общая информация по портфелям</title>
+</h:head>
+
+<h:body id="bodyBag">
+
+    <mc:Hat/>
+    <p:growl id="growl" showDetail="true" />
+
+    <h:form>
+        <div class="card">
+            <p:donutChart id="dc" model="#{donut.donutModel}" style="width: 100%; height: 500px;">
+                <p:ajax event="itemSelect" listener="#{donut.itemSelect}"/>
+            </p:donutChart>
+        </div>
+    </h:form>
+</h:body>
+</html>

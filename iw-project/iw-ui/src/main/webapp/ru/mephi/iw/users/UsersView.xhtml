@@ -4,7 +4,7 @@
       xmlns:mc = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:mcv = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/views"
+      xmlns:mcu = "http://java.sun.com/jsf/composite/ru/mephi/iw/IWComponents/users"
       xmlns:h="http://java.sun.com/jsf/html">
 
 <h:head>
@@ -18,7 +18,7 @@
 
     <h:form id="formSearch">
         <p:growl id="growl" showDetail="true" />
-        <mcv:UsersSearch update="formSearch" onclickDel="PF('deleteUserDlg').show();"/>
+        <mcu:UsersSearch update="formSearch" onclickDel="PF('deleteUserDlg').show();"/>
     </h:form>
 
     <h:form id="formDeleteDlg">

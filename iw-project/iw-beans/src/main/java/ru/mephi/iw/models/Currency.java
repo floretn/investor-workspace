@@ -13,4 +13,6 @@ public class Currency implements Serializable{
     private int id;
     /**cur_name*/
     private String name;
+    /**cur_course*/
+    private double course;
 }

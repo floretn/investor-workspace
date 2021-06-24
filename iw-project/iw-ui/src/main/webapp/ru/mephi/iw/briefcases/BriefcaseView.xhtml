@@ -50,23 +50,23 @@
     </div>
 
 
-    <div class="bubble">Ваши счета в портфеле: #{bv.accounts}</div>
+    <div class="bubble">Ваши счета в портфеле: #{bv.currentBriefcase.accountAndCurrencies}</div>
 
-    <p:dataTable id="table" var="stock" value="#{bv.stocks}">
+    <p:dataTable id="table" var="stock" value="#{bv.currentBriefcase.stockAndPriceAndSIBs}">
         <p:column headerText="Тикер акции">
-            <h:outputText value="#{stock.stockAndPrice.stock.ticker}"/>
+            <h:outputText value="#{stock.stock.ticker}"/>
         </p:column>
         <p:column headerText="Тип купленной акции">
-            <h:outputText value="#{stock.stocksInBriefcase.type}"/>
+            <h:outputText value="#{stock.stockInBriefcase.type}"/>
         </p:column>
         <p:column headerText="Количество акций в портфеле">
-            <h:outputText value="#{stock.stocksInBriefcase.stocksNumber}"/>
+            <h:outputText value="#{stock.stockInBriefcase.stocksNumber}"/>
         </p:column>
         <p:column headerText="Цена акции">
-            <h:outputText value="#{stock.stockAndPrice.stockPrice.price} #{stock.stockAndPrice.currencyOfPrice.name}"/>
+            <h:outputText value="#{stock.stockPrice.price} #{stock.currencyOfPrice.name}"/>
         </p:column>
         <p:column headerText="Время выставления цены">
-            <h:outputText value="#{stock.stockAndPrice.stockPrice.settingTime}"/>
+            <h:outputText value="#{stock.stockPrice.settingTime}"/>
         </p:column>
     </p:dataTable>
 

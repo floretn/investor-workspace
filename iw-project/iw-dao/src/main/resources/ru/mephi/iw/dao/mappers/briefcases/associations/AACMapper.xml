@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.mephi.iw.dao.mappers.briefcases.associations.AACMapper">
+
+    <resultMap id="AACMap" type="ru.mephi.iw.models.briefcases.associations.AccountAndCurrency">
+
+        <id column="acc_pk" property="id"/>
+
+        <association property="account" resultMap="ru.mephi.iw.dao.mappers.briefcases.AccountMapper.AccountMap"
+                     javaType="ru.mephi.iw.models.briefcases.Account"/>
+
+        <association property="currency" javaType="ru.mephi.iw.models.Currency">
+            <id column="a_cur_pk" property="id"/>
+            <result column="a_cur_name" property="name"/>
+            <result column="a_cur_course" property="course"/>
+        </association>
+    </resultMap>
+
+</mapper>

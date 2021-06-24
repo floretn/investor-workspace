@@ -6,6 +6,7 @@
     <resultMap id="CurrencyMap" type="ru.mephi.iw.models.Currency">
         <id column="cur_pk" property="id"/>
         <result column="cur_name" property="name"/>
+        <result column="cur_course" property="course"/>
     </resultMap>
 
     <select id="selectCurrencyByName" resultMap="CurrencyMap">
@@ -17,8 +18,8 @@
     </select>
 
     <insert id="insertCurrency" useGeneratedKeys="true" keyProperty="id" keyColumn="cur_pk">
-        insert into investor_workspace.t_currency (cur_name)
-        values (#{currency.name});
+        insert into investor_workspace.t_currency (cur_name, cur_course)
+        values (#{currency.name}, #{currency.course});
     </insert>
 
 </mapper>
