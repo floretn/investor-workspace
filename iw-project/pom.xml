@@ -13,6 +13,7 @@
         <module>iw-dao</module>
         <module>iw-download</module>
         <module>iw-ui</module>
+        <module>iw-db</module>
     </modules>
 
     <properties>
